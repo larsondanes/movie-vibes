@@ -1,0 +1,1 @@
+- After making changes and verifying them commit using standard syntax and commit messages
