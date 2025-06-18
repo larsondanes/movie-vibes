@@ -13,9 +13,7 @@ function App() {
       </header>
       <main>
         <div className="counter">
-          <button onClick={() => setCount(count + 1)}>
-            Count is {count}
-          </button>
+          <button onClick={() => setCount(count + 1)}>Count is {count}</button>
         </div>
       </main>
     </div>
@@ -23,3 +21,4 @@ function App() {
 }
 
 export default App;
+// test comment
