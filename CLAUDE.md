@@ -1,1 +1,2 @@
 - After making changes and verifying them commit using standard syntax and commit messages
+- When working from the implementation plan implement a step, test and validate it, commit the changes, and move on to the next step
