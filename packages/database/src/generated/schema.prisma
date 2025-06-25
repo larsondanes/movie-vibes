@@ -1,0 +1,173 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          String   @id @default(uuid()) @db.Uuid
+  email       String   @unique @db.Citext
+  username    String   @unique
+  displayName String?
+  avatar      String?
+  bio         String?
+  password    String
+  verified    Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  movieLists MovieList[]
+  reviews    Review[]
+  followers  Follow[]    @relation("UserFollowers")
+  following  Follow[]    @relation("UserFollowing")
+  likes      Like[]
+  activities Activity[]
+
+  @@map("users")
+}
+
+model Movie {
+  id           String    @id @default(uuid()) @db.Uuid
+  tmdbId       Int       @unique
+  title        String
+  overview     String?
+  releaseDate  DateTime?
+  runtime      Int?
+  posterPath   String?
+  backdropPath String?
+  voteAverage  Float?
+  genres       String[]
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  // Relations
+  movieListItems MovieListItem[]
+  reviews        Review[]
+  likes          Like[]
+
+  @@map("movies")
+}
+
+model MovieList {
+  id          String        @id @default(uuid()) @db.Uuid
+  name        String
+  description String?
+  type        MovieListType
+  privacy     PrivacyLevel  @default(PUBLIC)
+  userId      String        @db.Uuid
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  // Relations
+  user  User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  items MovieListItem[]
+
+  @@map("movie_lists")
+}
+
+model MovieListItem {
+  id          String    @id @default(uuid()) @db.Uuid
+  movieListId String    @db.Uuid
+  movieId     String    @db.Uuid
+  notes       String?
+  rating      Int?      @db.SmallInt
+  watchedAt   DateTime?
+  addedAt     DateTime  @default(now())
+
+  // Relations
+  movieList MovieList @relation(fields: [movieListId], references: [id], onDelete: Cascade)
+  movie     Movie     @relation(fields: [movieId], references: [id], onDelete: Cascade)
+
+  @@unique([movieListId, movieId])
+  @@map("movie_list_items")
+}
+
+model Review {
+  id        String   @id @default(uuid()) @db.Uuid
+  content   String
+  rating    Int      @db.SmallInt
+  movieId   String   @db.Uuid
+  userId    String   @db.Uuid
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  movie Movie  @relation(fields: [movieId], references: [id], onDelete: Cascade)
+  user  User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  likes Like[]
+
+  @@unique([movieId, userId])
+  @@map("reviews")
+}
+
+model Follow {
+  id          String   @id @default(uuid()) @db.Uuid
+  followerId  String   @db.Uuid
+  followingId String   @db.Uuid
+  createdAt   DateTime @default(now())
+
+  // Relations
+  follower  User @relation("UserFollowers", fields: [followerId], references: [id], onDelete: Cascade)
+  following User @relation("UserFollowing", fields: [followingId], references: [id], onDelete: Cascade)
+
+  @@unique([followerId, followingId])
+  @@map("follows")
+}
+
+model Like {
+  id        String   @id @default(uuid()) @db.Uuid
+  userId    String   @db.Uuid
+  movieId   String?  @db.Uuid
+  reviewId  String?  @db.Uuid
+  createdAt DateTime @default(now())
+
+  // Relations
+  user   User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  movie  Movie?  @relation(fields: [movieId], references: [id], onDelete: Cascade)
+  review Review? @relation(fields: [reviewId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, movieId])
+  @@unique([userId, reviewId])
+  @@map("likes")
+}
+
+model Activity {
+  id        String       @id @default(uuid()) @db.Uuid
+  type      ActivityType
+  userId    String       @db.Uuid
+  data      Json
+  createdAt DateTime     @default(now())
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("activities")
+}
+
+// Enums
+enum MovieListType {
+  WATCHED
+  WATCHLIST
+  CUSTOM
+}
+
+enum PrivacyLevel {
+  PUBLIC
+  FRIENDS
+  PRIVATE
+}
+
+enum ActivityType {
+  MOVIE_ADDED
+  REVIEW_CREATED
+  LIST_CREATED
+  USER_FOLLOWED
+}
