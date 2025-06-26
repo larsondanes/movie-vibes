@@ -1,24 +1,34 @@
-import { useState } from 'react';
-import { formatDate } from '@movie-vibes/shared';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Navigation from './components/Navigation';
+import ProtectedRoute from './components/ProtectedRoute';
+import Home from './pages/Home';
+import Login from './pages/Login';
+import Register from './pages/Register';
+import Dashboard from './pages/Dashboard';
 
 function App() {
-  const [count, setCount] = useState(0);
-
   return (
-    <div className="app">
-      <header className="app-header">
-        <h1>Movie Vibes</h1>
-        <p>A social media application for movie enthusiasts</p>
-        <p>Today is {formatDate(new Date())}</p>
-      </header>
-      <main>
-        <div className="counter">
-          <button onClick={() => setCount(count + 1)}>Count is {count}</button>
-        </div>
-      </main>
-    </div>
+    <Router>
+      <div className="app">
+        <Navigation />
+        <main className="main-content">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route
+              path="/dashboard"
+              element={
+                <ProtectedRoute>
+                  <Dashboard />
+                </ProtectedRoute>
+              }
+            />
+          </Routes>
+        </main>
+      </div>
+    </Router>
   );
 }
 
 export default App;
-// test comment
