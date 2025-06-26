@@ -92,9 +92,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       });
 
       if (data?.login) {
-        const { user, token } = data.login;
-        localStorage.setItem('token', token);
-        dispatch({ type: 'SET_USER', payload: { user, token } });
+        const { user, access_token } = data.login;
+        localStorage.setItem('token', access_token);
+        dispatch({ type: 'SET_USER', payload: { user, token: access_token } });
       }
     } catch (error) {
       dispatch({ type: 'SET_LOADING', payload: false });
@@ -110,9 +110,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       });
 
       if (data?.register) {
-        const { user, token } = data.register;
-        localStorage.setItem('token', token);
-        dispatch({ type: 'SET_USER', payload: { user, token } });
+        const { user, access_token } = data.register;
+        localStorage.setItem('token', access_token);
+        dispatch({ type: 'SET_USER', payload: { user, token: access_token } });
       }
     } catch (error) {
       dispatch({ type: 'SET_LOADING', payload: false });

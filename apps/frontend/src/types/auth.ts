@@ -2,8 +2,7 @@ export interface User {
   id: string;
   email: string;
   username: string;
-  firstName?: string;
-  lastName?: string;
+  displayName?: string;
   createdAt: string;
   updatedAt: string;
 }
@@ -24,11 +23,10 @@ export interface RegisterCredentials {
   email: string;
   username: string;
   password: string;
-  firstName?: string;
-  lastName?: string;
+  displayName?: string;
 }
 
 export interface AuthResponse {
   user: User;
-  token: string;
+  access_token: string;
 }

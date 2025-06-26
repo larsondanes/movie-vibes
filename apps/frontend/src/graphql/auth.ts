@@ -7,12 +7,11 @@ export const LOGIN_MUTATION = gql`
         id
         email
         username
-        firstName
-        lastName
+        displayName
         createdAt
         updatedAt
       }
-      token
+      access_token
     }
   }
 `;
@@ -24,12 +23,11 @@ export const REGISTER_MUTATION = gql`
         id
         email
         username
-        firstName
-        lastName
+        displayName
         createdAt
         updatedAt
       }
-      token
+      access_token
     }
   }
 `;
@@ -40,8 +38,7 @@ export const ME_QUERY = gql`
       id
       email
       username
-      firstName
-      lastName
+      displayName
       createdAt
       updatedAt
     }

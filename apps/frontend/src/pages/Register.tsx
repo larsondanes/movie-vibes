@@ -8,8 +8,7 @@ function Register() {
     email: '',
     username: '',
     password: '',
-    firstName: '',
-    lastName: '',
+    displayName: '',
   });
   const [error, setError] = useState('');
 
@@ -70,23 +69,12 @@ function Register() {
         </div>
 
         <div className="form-group">
-          <label htmlFor="firstName">First Name</label>
+          <label htmlFor="displayName">Display Name</label>
           <input
             type="text"
-            id="firstName"
-            name="firstName"
-            value={formData.firstName}
-            onChange={handleChange}
-          />
-        </div>
-
-        <div className="form-group">
-          <label htmlFor="lastName">Last Name</label>
-          <input
-            type="text"
-            id="lastName"
-            name="lastName"
-            value={formData.lastName}
+            id="displayName"
+            name="displayName"
+            value={formData.displayName}
             onChange={handleChange}
           />
         </div>
