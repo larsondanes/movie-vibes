@@ -24,11 +24,46 @@ type AuthPayload {
   user: User!
 }
 
+type Movie {
+  id: ID!
+  tmdbId: Int!
+  title: String!
+  overview: String
+  releaseDate: DateTime
+  runtime: Int
+  posterPath: String
+  backdropPath: String
+  voteAverage: Float
+  genres: [String!]!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  posterUrl: String
+  backdropUrl: String
+}
+
+type MovieSearchResult {
+  movies: [Movie!]!
+  page: Int!
+  totalPages: Int!
+  totalResults: Int!
+}
+
 type Query {
   me: User!
   users: [User!]!
   user(id: String!): User!
   userByUsername(username: String!): User!
+  searchMovies(searchInput: SearchMoviesInput!): MovieSearchResult!
+  popularMovies(page: Int = 1): MovieSearchResult!
+  nowPlayingMovies(page: Int = 1): MovieSearchResult!
+  topRatedMovies(page: Int = 1): MovieSearchResult!
+  movie(id: String!): Movie!
+  movieByTmdbId(tmdbId: Int!): Movie!
+}
+
+input SearchMoviesInput {
+  query: String!
+  page: Int = 1
 }
 
 type Mutation {

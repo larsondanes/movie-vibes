@@ -3,7 +3,6 @@ import { UnauthorizedException } from '@nestjs/common';
 import { AuthResolver } from '../auth.resolver';
 import { AuthService } from '../auth.service';
 import {
-  _mockUser,
   mockRegisterInput,
   mockLoginInput,
   mockAuthPayload,
