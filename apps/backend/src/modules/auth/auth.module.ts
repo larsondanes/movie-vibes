@@ -5,6 +5,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AuthService } from './auth.service';
 import { AuthResolver } from './auth.resolver';
 import { UsersModule } from '../users/users.module';
+import { PrismaModule } from '../../database/prisma.module';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { LocalStrategy } from './strategies/local.strategy';
 
@@ -22,6 +23,7 @@ import { LocalStrategy } from './strategies/local.strategy';
       inject: [ConfigService],
     }),
     UsersModule,
+    PrismaModule,
   ],
   providers: [AuthResolver, AuthService, JwtStrategy, LocalStrategy],
   exports: [AuthService],

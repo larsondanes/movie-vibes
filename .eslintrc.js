@@ -4,6 +4,11 @@ module.exports = {
     node: true,
     es2022: true,
   },
+  ignorePatterns: [
+    '**/generated/**',
+    '**/src/generated/**',
+    'packages/database/src/generated/**',
+  ],
   extends: ['eslint:recommended', 'prettier'],
   parserOptions: {
     ecmaVersion: 2022,
@@ -63,6 +68,31 @@ module.exports = {
       env: {
         browser: true,
         es2022: true,
+      },
+      plugins: ['prettier'],
+      rules: {
+        'prettier/prettier': 'error',
+        'no-unused-vars': [
+          'error',
+          {
+            argsIgnorePattern: '^_',
+            varsIgnorePattern: '^_',
+            ignoreRestSiblings: true,
+          },
+        ],
+      },
+    },
+    {
+      files: ['**/*.spec.ts', '**/*.test.ts', '**/test-utils/**/*.ts'],
+      env: {
+        node: true,
+        es2022: true,
+        jest: true,
+      },
+      parser: '@typescript-eslint/parser',
+      parserOptions: {
+        ecmaVersion: 2022,
+        sourceType: 'module',
       },
       plugins: ['prettier'],
       rules: {
