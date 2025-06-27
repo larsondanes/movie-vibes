@@ -78,3 +78,11 @@ storybook-static
 # Temporary folders
 tmp/
 temp/
+
+# Binary packages and installers
+*.deb
+*.rpm
+*.pkg
+*.dmg
+*.msi
+*.exe
