@@ -83,14 +83,16 @@ export class TMDbService {
   async searchMovies(query: string, page = 1): Promise<TMDbSearchResponse> {
     try {
       const url = `${this.baseUrl}/search/movie`;
+      const params = {
+        api_key: this.apiKey,
+        query,
+        page,
+        include_adult: false,
+      };
+
       const response = await firstValueFrom(
         this.httpService.get<TMDbSearchResponse>(url, {
-          params: {
-            api_key: this.apiKey,
-            query,
-            page,
-            include_adult: false,
-          },
+          params,
         })
       );
 
