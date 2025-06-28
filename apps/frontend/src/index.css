@@ -54,7 +54,6 @@ button:focus-visible {
 }
 
 .app {
-  max-width: 1280px;
   margin: 0 auto;
   min-height: 100vh;
 }
@@ -193,3 +192,6 @@ button:focus-visible {
     color: #213547;
   }
 }
+
+/* Import movie styles */
+@import url('./styles/movies.css');

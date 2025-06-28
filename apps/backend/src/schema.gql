@@ -2,28 +2,6 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type User {
-  id: ID!
-  email: String!
-  username: String!
-  displayName: String
-  avatar: String
-  bio: String
-  verified: Boolean!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-}
-
-"""
-A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
-"""
-scalar DateTime
-
-type AuthPayload {
-  access_token: String!
-  user: User!
-}
-
 type Movie {
   id: ID!
   tmdbId: Int!
@@ -41,6 +19,110 @@ type Movie {
   backdropUrl: String
 }
 
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type ProductionCompany {
+  id: Int!
+  logoPath: String
+  name: String!
+  originCountry: String!
+  logoUrl: String
+}
+
+type ProductionCountry {
+  iso31661: String!
+  name: String!
+}
+
+type SpokenLanguage {
+  englishName: String!
+  iso6391: String!
+  name: String!
+}
+
+type MovieCollection {
+  id: Int!
+  name: String!
+  posterPath: String
+  backdropPath: String
+  posterUrl: String
+  backdropUrl: String
+}
+
+type MovieDetails {
+  id: ID!
+  tmdbId: Int!
+  title: String!
+  overview: String
+  releaseDate: DateTime
+  runtime: Int
+  posterPath: String
+  backdropPath: String
+  voteAverage: Float
+  genres: [String!]!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  posterUrl: String
+  backdropUrl: String
+  budget: Int
+  revenue: Int
+  homepage: String
+  imdbId: String
+  originalLanguage: String
+  originalTitle: String
+  popularity: Float
+  status: String
+  tagline: String
+  belongsToCollection: MovieCollection
+  productionCompanies: [ProductionCompany!]!
+  productionCountries: [ProductionCountry!]!
+  spokenLanguages: [SpokenLanguage!]!
+  voteCount: Int
+  adult: Boolean
+}
+
+type CastMember {
+  id: Int!
+  name: String!
+  character: String!
+  profilePath: String
+  order: Int!
+  profileUrl: String
+}
+
+type CrewMember {
+  id: Int!
+  name: String!
+  job: String!
+  department: String!
+  profilePath: String
+  profileUrl: String
+}
+
+type MovieCredits {
+  id: Int!
+  cast: [CastMember!]!
+  crew: [CrewMember!]!
+}
+
+type MovieVideo {
+  id: String!
+  key: String!
+  name: String!
+  site: String!
+  type: String!
+  official: Boolean!
+  publishedAt: String!
+}
+
+type MovieVideos {
+  id: Int!
+  results: [MovieVideo!]!
+}
+
 type MovieSearchResult {
   movies: [Movie!]!
   page: Int!
@@ -49,47 +131,20 @@ type MovieSearchResult {
 }
 
 type Query {
-  me: User!
-  users: [User!]!
-  user(id: String!): User!
-  userByUsername(username: String!): User!
   searchMovies(searchInput: SearchMoviesInput!): MovieSearchResult!
   popularMovies(page: Int = 1): MovieSearchResult!
   nowPlayingMovies(page: Int = 1): MovieSearchResult!
   topRatedMovies(page: Int = 1): MovieSearchResult!
   movie(id: String!): Movie!
   movieByTmdbId(tmdbId: Int!): Movie!
+  movieDetails(tmdbId: Int!): MovieDetails!
+  movieCredits(tmdbId: Int!): MovieCredits!
+  movieVideos(tmdbId: Int!): MovieVideos!
+  similarMovies(tmdbId: Int!, page: Int = 1): MovieSearchResult!
+  movieRecommendations(tmdbId: Int!, page: Int = 1): MovieSearchResult!
 }
 
 input SearchMoviesInput {
   query: String!
   page: Int = 1
-}
-
-type Mutation {
-  register(registerInput: RegisterInput!): AuthPayload!
-  login(loginInput: LoginInput!): AuthPayload!
-  createUser(createUserInput: CreateUserInput!): User!
-}
-
-input RegisterInput {
-  email: String!
-  username: String!
-  displayName: String
-  password: String!
-  bio: String
-}
-
-input LoginInput {
-  email: String!
-  password: String!
-}
-
-input CreateUserInput {
-  email: String!
-  username: String!
-  displayName: String
-  password: String!
-  bio: String
-  avatar: String
 }

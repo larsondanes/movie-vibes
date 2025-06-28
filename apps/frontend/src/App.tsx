@@ -5,13 +5,14 @@ import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
+import Movies from './pages/Movies';
 
 function App() {
   return (
     <Router>
       <div className="app">
         <Navigation />
-        <main className="main-content">
+        <main>
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
@@ -21,6 +22,14 @@ function App() {
               element={
                 <ProtectedRoute>
                   <Dashboard />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/movies"
+              element={
+                <ProtectedRoute>
+                  <Movies />
                 </ProtectedRoute>
               }
             />

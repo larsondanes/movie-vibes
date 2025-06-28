@@ -14,6 +14,7 @@ function Navigation() {
         {isAuthenticated ? (
           <>
             <Link to="/dashboard">Dashboard</Link>
+            <Link to="/movies">Movies</Link>
             <span>Welcome, {user?.displayName || user?.username}!</span>
             <button onClick={logout}>Logout</button>
           </>

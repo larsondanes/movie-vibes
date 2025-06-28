@@ -62,6 +62,43 @@ export interface TMDbMovieDetails extends TMDbMovie {
   tagline: string | null;
 }
 
+export interface TMDbCastMember {
+  id: number;
+  name: string;
+  character: string;
+  profile_path: string | null;
+  order: number;
+}
+
+export interface TMDbCrewMember {
+  id: number;
+  name: string;
+  job: string;
+  department: string;
+  profile_path: string | null;
+}
+
+export interface TMDbCredits {
+  id: number;
+  cast: TMDbCastMember[];
+  crew: TMDbCrewMember[];
+}
+
+export interface TMDbVideo {
+  id: string;
+  key: string;
+  name: string;
+  site: string;
+  type: string;
+  official: boolean;
+  published_at: string;
+}
+
+export interface TMDbVideosResponse {
+  id: number;
+  results: TMDbVideo[];
+}
+
 @Injectable()
 export class TMDbService {
   private readonly logger = new Logger(TMDbService.name);
@@ -190,6 +227,98 @@ export class TMDbService {
         error instanceof Error ? error.stack : undefined
       );
       throw new Error('Failed to get top rated movies');
+    }
+  }
+
+  async getMovieCredits(movieId: number): Promise<TMDbCredits> {
+    try {
+      const url = `${this.baseUrl}/movie/${movieId}/credits`;
+      const response = await firstValueFrom(
+        this.httpService.get<TMDbCredits>(url, {
+          params: {
+            api_key: this.apiKey,
+          },
+        })
+      );
+
+      return response.data;
+    } catch (error) {
+      this.logger.error(
+        `Failed to get movie credits for ID ${movieId}: ${error instanceof Error ? error.message : 'Unknown error'}`,
+        error instanceof Error ? error.stack : undefined
+      );
+      throw new Error('Failed to get movie credits');
+    }
+  }
+
+  async getMovieVideos(movieId: number): Promise<TMDbVideosResponse> {
+    try {
+      const url = `${this.baseUrl}/movie/${movieId}/videos`;
+      const response = await firstValueFrom(
+        this.httpService.get<TMDbVideosResponse>(url, {
+          params: {
+            api_key: this.apiKey,
+          },
+        })
+      );
+
+      return response.data;
+    } catch (error) {
+      this.logger.error(
+        `Failed to get movie videos for ID ${movieId}: ${error instanceof Error ? error.message : 'Unknown error'}`,
+        error instanceof Error ? error.stack : undefined
+      );
+      throw new Error('Failed to get movie videos');
+    }
+  }
+
+  async getSimilarMovies(
+    movieId: number,
+    page = 1
+  ): Promise<TMDbSearchResponse> {
+    try {
+      const url = `${this.baseUrl}/movie/${movieId}/similar`;
+      const response = await firstValueFrom(
+        this.httpService.get<TMDbSearchResponse>(url, {
+          params: {
+            api_key: this.apiKey,
+            page,
+          },
+        })
+      );
+
+      return response.data;
+    } catch (error) {
+      this.logger.error(
+        `Failed to get similar movies for ID ${movieId}: ${error instanceof Error ? error.message : 'Unknown error'}`,
+        error instanceof Error ? error.stack : undefined
+      );
+      throw new Error('Failed to get similar movies');
+    }
+  }
+
+  async getMovieRecommendations(
+    movieId: number,
+    page = 1
+  ): Promise<TMDbSearchResponse> {
+    try {
+      const url = `${this.baseUrl}/movie/${movieId}/recommendations`;
+      const response = await firstValueFrom(
+        this.httpService.get<TMDbSearchResponse>(url, {
+          params: {
+            api_key: this.apiKey,
+            page,
+          },
+        })
+      );
+
+      return response.data;
+    } catch (error) {
+      this.logger.error(
+        `Failed to get movie recommendations for ID ${movieId}: ${error instanceof Error ? error.message : 'Unknown error'}`,
+        error instanceof Error ? error.stack : undefined
+      );
+      throw new Error('Failed to get movie recommendations');
     }
   }
 
