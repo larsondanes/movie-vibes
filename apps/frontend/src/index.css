@@ -1,197 +1,157 @@
-:root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
-}
-
-body {
-  margin: 0;
-  min-width: 320px;
-  min-height: 100vh;
-}
-
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
-}
-
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  color: white;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-}
-
-.app {
-  margin: 0 auto;
-  min-height: 100vh;
-}
-
-.navigation {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1rem 2rem;
-  border-bottom: 1px solid #333;
-}
-
-.nav-brand a {
-  font-size: 1.5rem;
-  font-weight: bold;
-  text-decoration: none;
-}
-
-.nav-links {
-  display: flex;
-  gap: 1rem;
-}
-
-.nav-links a {
-  text-decoration: none;
-  padding: 0.5rem 1rem;
-  border-radius: 4px;
-  transition: background-color 0.25s;
-}
-
-.nav-links a:hover {
-  background-color: rgba(100, 108, 255, 0.1);
-}
-
-.main-content {
-  padding: 2rem;
-  text-align: center;
-}
-
-/* Auth Form Styles */
-.auth-form-container {
-  max-width: 400px;
-  margin: 2rem auto;
-}
-
-.auth-form {
-  background: rgba(255, 255, 255, 0.05);
-  padding: 2rem;
-  border-radius: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.auth-form h2 {
-  margin-bottom: 1.5rem;
-  font-size: 2rem;
-}
-
-.form-group {
-  margin-bottom: 1rem;
-  text-align: left;
-}
-
-.form-group label {
-  display: block;
-  margin-bottom: 0.5rem;
-  font-weight: 500;
-}
-
-.form-group input {
-  width: 100%;
-  padding: 0.75rem;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 4px;
-  background: rgba(255, 255, 255, 0.05);
-  color: inherit;
-  font-size: 1rem;
-  box-sizing: border-box;
-}
-
-.form-group input:focus {
-  outline: none;
-  border-color: #646cff;
-  box-shadow: 0 0 0 2px rgba(100, 108, 255, 0.2);
-}
-
-.submit-button {
-  width: 100%;
-  margin-top: 1rem;
-  padding: 0.75rem;
-  font-size: 1rem;
-}
-
-.submit-button:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-.error-message {
-  background: rgba(220, 53, 69, 0.1);
-  color: #dc3545;
-  padding: 0.75rem;
-  border-radius: 4px;
-  margin-bottom: 1rem;
-  border: 1px solid rgba(220, 53, 69, 0.2);
-}
-
-.auth-links {
-  text-align: center;
-  margin-top: 1rem;
-}
-
-.auth-links a {
-  color: #646cff;
-  text-decoration: none;
-}
-
-.auth-links a:hover {
-  text-decoration: underline;
-}
-
-.loading {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 200px;
-  font-size: 1.2rem;
-}
-
-@media (prefers-color-scheme: light) {
+/* Custom CSS Layer for Movie-Specific Patterns */
+@layer base {
   :root {
-    color: #213547;
-    background-color: #ffffff;
+    font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+    line-height: 1.5;
+    font-weight: 400;
+
+    color-scheme: light dark;
+    color: rgba(255, 255, 255, 0.87);
+    background-color: #242424;
+
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
-  button {
-    background-color: #f9f9f9;
-    color: #213547;
+
+  body {
+    margin: 0;
+    min-width: 320px;
+    min-height: 100vh;
+  }
+
+  @media (prefers-color-scheme: light) {
+    :root {
+      color: #213547;
+      background-color: #ffffff;
+    }
   }
 }
 
-/* Import movie styles */
+@layer components {
+  /* Auth Form Components */
+  .auth-form-container {
+    @apply max-w-sm mx-auto mt-8;
+  }
+
+  .auth-form {
+    @apply bg-white/5 p-8 rounded-lg border border-white/10;
+  }
+
+  .auth-form h2 {
+    @apply mb-6 text-2xl;
+  }
+
+  .form-group {
+    @apply mb-4 text-left;
+  }
+
+  .form-group label {
+    @apply block mb-2 font-medium;
+  }
+
+  .form-group input {
+    @apply w-full p-3 border border-white/20 rounded bg-white/5 text-inherit text-base box-border;
+  }
+
+  .form-group input:focus {
+    @apply outline-none border-primary-500 ring-2 ring-primary-500/20;
+  }
+
+  .submit-button {
+    @apply w-full mt-4 p-3 text-base rounded-lg bg-gray-800 text-white border border-transparent font-medium cursor-pointer transition-colors;
+  }
+
+  .submit-button:hover {
+    @apply border-primary-500;
+  }
+
+  .submit-button:disabled {
+    @apply opacity-60 cursor-not-allowed;
+  }
+
+  .error-message {
+    @apply bg-error-500/10 text-red-300 p-3 rounded mb-4 border border-error-500/20;
+  }
+
+  .auth-links {
+    @apply text-center mt-4;
+  }
+
+  .auth-links a {
+    @apply text-primary-500 no-underline;
+  }
+
+  .auth-links a:hover {
+    @apply underline;
+  }
+
+  /* Navigation Components */
+  .navigation {
+    @apply flex justify-between items-center p-4 px-8 border-b border-gray-700;
+  }
+
+  .nav-brand a {
+    @apply text-2xl font-bold no-underline;
+  }
+
+  .nav-links {
+    @apply flex gap-4;
+  }
+
+  .nav-links a {
+    @apply no-underline p-2 px-4 rounded transition-colors;
+  }
+
+  .nav-links a:hover {
+    @apply bg-primary-500/10;
+  }
+
+  /* App Layout */
+  .app {
+    @apply mx-auto min-h-screen;
+  }
+
+  .main-content {
+    @apply p-8 text-center;
+  }
+
+  .loading {
+    @apply flex justify-center items-center h-48 text-xl;
+  }
+}
+
+@layer utilities {
+  /* Custom movie-specific utilities */
+  .gradient-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  }
+
+  .gradient-text {
+    background: linear-gradient(45deg, #fff, #e0e7ff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .backdrop-blur-movie {
+    backdrop-filter: blur(10px);
+  }
+
+  .animate-shimmer {
+    animation: shimmer 2s infinite;
+  }
+
+  @keyframes shimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+  }
+}
+
+/* Import remaining movie styles - will migrate these gradually */
 @import url('./styles/movies.css');

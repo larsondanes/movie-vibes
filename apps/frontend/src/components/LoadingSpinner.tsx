@@ -18,13 +18,13 @@ const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
   };
 
   const colorClasses = {
-    primary: 'text-blue-600',
-    secondary: 'text-gray-600',
+    primary: 'text-primary-500',
+    secondary: 'text-gray-500',
     white: 'text-white',
   };
 
   return (
-    <div className={`loading-spinner ${className}`}>
+    <div className={`inline-block ${className}`}>
       <svg
         className={`animate-spin ${sizeClasses[size]} ${colorClasses[color]}`}
         xmlns="http://www.w3.org/2000/svg"

@@ -74,24 +74,30 @@ const ErrorMessage: React.FC<ErrorMessageProps> = ({
   const getTypeClasses = () => {
     switch (type) {
       case 'warning':
-        return 'error-warning';
+        return 'bg-warning-500/10 border-warning-500/30 text-orange-200';
       case 'info':
-        return 'error-info';
+        return 'bg-blue-500/10 border-blue-500/30 text-blue-200';
       default:
-        return 'error-error';
+        return 'bg-error-500/10 border-error-500/30 text-red-200';
     }
   };
 
   return (
-    <div className={`error-message ${getTypeClasses()} ${className}`}>
-      <div className="error-icon">{getIcon()}</div>
+    <div
+      className={`flex items-start gap-4 p-5 rounded-xl my-8 border ${getTypeClasses()} ${className}`}
+    >
+      <div className="flex-shrink-0 mt-0.5">{getIcon()}</div>
 
-      <div className="error-content">
-        {title && <h3 className="error-title">{title}</h3>}
-        <p className="error-text">{message}</p>
+      <div className="flex-1">
+        {title && <h3 className="text-lg font-semibold mb-2">{title}</h3>}
+        <p className="mb-4 leading-relaxed">{message}</p>
 
         {onRetry && (
-          <button onClick={onRetry} className="retry-button" type="button">
+          <button
+            onClick={onRetry}
+            className="flex items-center gap-2 bg-white/10 border border-white/20 rounded-lg px-4 py-2 text-current cursor-pointer transition-all hover:bg-white/20 font-medium"
+            type="button"
+          >
             <svg
               width="16"
               height="16"

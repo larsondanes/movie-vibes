@@ -43,12 +43,12 @@ const MovieCard: React.FC<MovieCardProps> = ({
   };
 
   const getRatingColor = (rating?: number) => {
-    if (!rating) return 'rating-unknown';
+    if (!rating) return 'bg-gray-500/90 text-white';
     const normalized = rating / 2; // Convert to 5-point scale
-    if (normalized >= 4) return 'rating-excellent';
-    if (normalized >= 3) return 'rating-good';
-    if (normalized >= 2) return 'rating-fair';
-    return 'rating-poor';
+    if (normalized >= 4) return 'bg-green-500/90 text-white';
+    if (normalized >= 3) return 'bg-blue-500/90 text-white';
+    if (normalized >= 2) return 'bg-amber-500/90 text-white';
+    return 'bg-red-500/90 text-white';
   };
 
   const hasPoster = movie.posterUrl && !imageError;
@@ -56,51 +56,53 @@ const MovieCard: React.FC<MovieCardProps> = ({
 
   return (
     <div
-      className={`movie-card ${className} ${isClickable ? 'clickable' : ''} ${
-        imageLoaded ? 'loaded' : ''
-      }`}
+      className={`bg-white/10 rounded-xl overflow-hidden transition-all duration-300 backdrop-blur-md border border-white/10 ${
+        isClickable
+          ? 'cursor-pointer hover:transform hover:-translate-y-2 hover:shadow-2xl hover:shadow-black/20'
+          : ''
+      } ${className}`}
       onClick={isClickable ? handleClick : undefined}
       onKeyDown={isClickable ? handleKeyDown : undefined}
       tabIndex={isClickable ? 0 : undefined}
       role={isClickable ? 'button' : undefined}
       aria-label={isClickable ? `View details for ${movie.title}` : undefined}
     >
-      <div className="movie-poster-container">
+      <div className="relative aspect-poster overflow-hidden">
         {hasPoster ? (
           <>
             <img
               src={movie.posterUrl}
               alt={`${movie.title} poster`}
-              className={`movie-poster ${imageLoaded ? 'loaded' : ''}`}
+              className={`w-full h-full object-cover transition-all duration-300 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
               loading={priority ? 'eager' : 'lazy'}
               onLoad={() => setImageLoaded(true)}
               onError={() => setImageError(true)}
             />
             {!imageLoaded && (
-              <div className="poster-skeleton">
-                <div className="skeleton-shimmer" />
+              <div className="absolute inset-0 bg-white/5 flex items-center justify-center">
+                <div className="w-full h-full bg-gradient-to-r from-transparent via-white/10 to-transparent animate-shimmer" />
               </div>
             )}
           </>
         ) : (
-          <div className="poster-placeholder">
-            <div className="placeholder-icon">🎬</div>
-            <span className="placeholder-text">No Image</span>
+          <div className="w-full h-full flex flex-col items-center justify-center bg-white/5 text-white/60">
+            <div className="text-4xl mb-2">🎬</div>
+            <span className="text-sm">No Image</span>
           </div>
         )}
 
         {showDetails && movie.voteAverage && (
-          <div className={`rating-badge ${getRatingColor(movie.voteAverage)}`}>
-            <span className="rating-stars">⭐</span>
-            <span className="rating-value">
-              {formatRating(movie.voteAverage)}
-            </span>
+          <div
+            className={`absolute top-2 right-2 flex items-center gap-1 px-2 py-1 rounded-2xl text-sm font-semibold backdrop-blur-md ${getRatingColor(movie.voteAverage)}`}
+          >
+            <span>⭐</span>
+            <span>{formatRating(movie.voteAverage)}</span>
           </div>
         )}
 
         {isClickable && (
-          <div className="hover-overlay">
-            <div className="play-icon">
+          <div className="absolute inset-0 bg-black/80 flex flex-col items-center justify-center opacity-0 transition-all duration-300 group-hover:opacity-100 hover:opacity-100">
+            <div className="text-2xl mb-2">
               <svg
                 width="24"
                 height="24"
@@ -110,45 +112,51 @@ const MovieCard: React.FC<MovieCardProps> = ({
                 <path d="M8 5v14l11-7z" />
               </svg>
             </div>
-            <span className="view-details">View Details</span>
+            <span className="font-medium text-white">View Details</span>
           </div>
         )}
       </div>
 
       {showDetails && (
-        <div className="movie-info">
-          <h3 className="movie-title" title={movie.title}>
+        <div className="p-4">
+          <h3
+            className="text-lg font-semibold mb-2 leading-tight line-clamp-2"
+            title={movie.title}
+          >
             {movie.title}
           </h3>
 
-          <div className="movie-meta">
-            <span className="release-year">
-              {formatReleaseYear(movie.releaseDate)}
-            </span>
+          <div className="flex items-center gap-2 mb-2 text-sm opacity-80">
+            <span>{formatReleaseYear(movie.releaseDate)}</span>
             {movie.runtime && (
               <>
-                <span className="meta-separator">•</span>
-                <span className="runtime">{movie.runtime}m</span>
+                <span className="opacity-50">•</span>
+                <span>{movie.runtime}m</span>
               </>
             )}
           </div>
 
           {movie.genres && movie.genres.length > 0 && (
-            <div className="movie-genres">
+            <div className="mb-3 text-xs opacity-70">
               {movie.genres.slice(0, 3).map((genre, index) => (
-                <span key={genre} className="genre-tag">
+                <span key={genre} className="text-accent-400">
                   {genre}
                   {index < Math.min(movie.genres.length, 3) - 1 && ', '}
                 </span>
               ))}
               {movie.genres.length > 3 && (
-                <span className="genre-more">+{movie.genres.length - 3}</span>
+                <span className="text-gray-400">
+                  +{movie.genres.length - 3}
+                </span>
               )}
             </div>
           )}
 
           {movie.overview && (
-            <p className="movie-overview" title={movie.overview}>
+            <p
+              className="text-sm leading-relaxed opacity-80 line-clamp-3"
+              title={movie.overview}
+            >
               {movie.overview.length > 120
                 ? `${movie.overview.substring(0, 120)}...`
                 : movie.overview}
