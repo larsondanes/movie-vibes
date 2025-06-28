@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useQuery } from '@apollo/client';
+import { useNavigate } from 'react-router-dom';
 import {
   POPULAR_MOVIES_QUERY,
   NOW_PLAYING_MOVIES_QUERY,
   TOP_RATED_MOVIES_QUERY,
 } from '../graphql/movies';
-import { MovieSearchResult } from '../types/movie';
+import { MovieSearchResult, Movie } from '../types/movie';
 import MovieGrid from './MovieGrid';
 import LoadingSpinner from './LoadingSpinner';
 import ErrorMessage from './ErrorMessage';
@@ -16,14 +17,13 @@ type BrowseCategory = 'popular' | 'now_playing' | 'top_rated';
 interface MovieBrowserProps {
   className?: string;
   defaultCategory?: BrowseCategory;
-  onMovieClick?: (_movie: MovieSearchResult['movies'][0]) => void;
 }
 
 const MovieBrowser: React.FC<MovieBrowserProps> = ({
   className = '',
   defaultCategory = 'popular',
-  onMovieClick,
 }) => {
+  const navigate = useNavigate();
   const [activeCategory, setActiveCategory] =
     useState<BrowseCategory>(defaultCategory);
   const [currentPage, setCurrentPage] = useState(1);
@@ -98,6 +98,10 @@ const MovieBrowser: React.FC<MovieBrowserProps> = ({
 
   const movieData = getMovieData();
 
+  const handleMovieClick = (movie: Movie) => {
+    navigate(`/movies/${movie.tmdbId}`);
+  };
+
   return (
     <div className={`movie-browser ${className}`}>
       <div className="browser-header">
@@ -158,7 +162,7 @@ const MovieBrowser: React.FC<MovieBrowserProps> = ({
 
             <MovieGrid
               movies={movieData.movies}
-              onMovieClick={onMovieClick}
+              onMovieClick={handleMovieClick}
               className="browser-grid"
             />
 

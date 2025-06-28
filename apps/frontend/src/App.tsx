@@ -6,6 +6,7 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import Movies from './pages/Movies';
+import MovieDetail from './pages/MovieDetail';
 
 function App() {
   return (
@@ -30,6 +31,14 @@ function App() {
               element={
                 <ProtectedRoute>
                   <Movies />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/movies/:id"
+              element={
+                <ProtectedRoute>
+                  <MovieDetail />
                 </ProtectedRoute>
               }
             />

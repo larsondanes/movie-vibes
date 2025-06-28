@@ -1,7 +1,8 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { useLazyQuery } from '@apollo/client';
+import { useNavigate } from 'react-router-dom';
 import { SEARCH_MOVIES_QUERY } from '../graphql/movies';
-import { MovieSearchResult } from '../types/movie';
+import { MovieSearchResult, Movie } from '../types/movie';
 import MovieGrid from './MovieGrid';
 import SearchBar from './SearchBar';
 import LoadingSpinner from './LoadingSpinner';
@@ -13,6 +14,7 @@ interface MovieSearchProps {
 }
 
 const MovieSearch: React.FC<MovieSearchProps> = ({ className = '' }) => {
+  const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [searchResults, setSearchResults] = useState<MovieSearchResult | null>(
@@ -100,6 +102,10 @@ const MovieSearch: React.FC<MovieSearchProps> = ({ className = '' }) => {
   const isEmpty =
     hasSearched && searchResults && searchResults.movies.length === 0;
 
+  const handleMovieClick = (movie: Movie) => {
+    navigate(`/movies/${movie.tmdbId}`);
+  };
+
   return (
     <div className={`movie-search ${className}`}>
       <div className="search-header">
@@ -163,6 +169,7 @@ const MovieSearch: React.FC<MovieSearchProps> = ({ className = '' }) => {
           <>
             <MovieGrid
               movies={searchResults.movies}
+              onMovieClick={handleMovieClick}
               className="search-results-grid"
             />
 
