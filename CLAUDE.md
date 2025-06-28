@@ -4,3 +4,5 @@
 - Whenever possible, enshrine new functionality like backend business logic or frontend components via unit tests
 - The implementation plan is located in the project root in the file called implementation-plan.md
 - Review CLAUDE.md after compacting and respect project memory
+- Assume frontend dev server is running on port 3000
+- Assume backend dev server is running on port 3001
