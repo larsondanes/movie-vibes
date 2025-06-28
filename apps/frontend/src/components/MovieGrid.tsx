@@ -17,14 +17,19 @@ const MovieGrid: React.FC<MovieGridProps> = ({
 }) => {
   if (loading) {
     return (
-      <div className={`movie-grid loading ${className}`}>
+      <div
+        className={`grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 md:gap-6 my-8 ${className}`}
+      >
         {Array.from({ length: 20 }, (_, index) => (
-          <div key={index} className="movie-card-skeleton">
-            <div className="skeleton-poster" />
-            <div className="skeleton-content">
-              <div className="skeleton-title" />
-              <div className="skeleton-subtitle" />
-              <div className="skeleton-text" />
+          <div
+            key={index}
+            className="bg-white/10 rounded-xl overflow-hidden animate-pulse"
+          >
+            <div className="aspect-poster bg-white/10" />
+            <div className="p-4">
+              <div className="h-5 bg-white/10 rounded mb-2" />
+              <div className="h-4 bg-white/5 rounded mb-2 w-3/5" />
+              <div className="h-3 bg-white/5 rounded w-4/5" />
             </div>
           </div>
         ))}
@@ -37,14 +42,11 @@ const MovieGrid: React.FC<MovieGridProps> = ({
   }
 
   return (
-    <div className={`movie-grid ${className}`}>
+    <div
+      className={`grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 md:gap-6 my-8 ${className}`}
+    >
       {movies.map(movie => (
-        <MovieCard
-          key={movie.id}
-          movie={movie}
-          onClick={onMovieClick}
-          className="grid-item"
-        />
+        <MovieCard key={movie.id} movie={movie} onClick={onMovieClick} />
       ))}
     </div>
   );

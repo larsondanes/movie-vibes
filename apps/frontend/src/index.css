@@ -1,3 +1,6 @@
+/* Import remaining movie styles first */
+@import url('./styles/movies.css');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -9,26 +12,34 @@
     line-height: 1.5;
     font-weight: 400;
 
-    color-scheme: light dark;
-    color: rgba(255, 255, 255, 0.87);
-    background-color: #242424;
-
     font-synthesis: none;
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
 
-  body {
-    margin: 0;
-    min-width: 320px;
-    min-height: 100vh;
+  html {
+    @apply text-white bg-gray-900;
   }
 
+  body {
+    @apply m-0 min-w-80 min-h-screen;
+  }
+
+  /* Light mode support */
+  html.light {
+    @apply text-gray-800 bg-white;
+  }
+
+  /* Dark mode is default */
+  html.dark {
+    @apply text-white bg-gray-900;
+  }
+
+  /* System preference fallback */
   @media (prefers-color-scheme: light) {
-    :root {
-      color: #213547;
-      background-color: #ffffff;
+    html:not(.dark) {
+      @apply text-gray-800 bg-white;
     }
   }
 }
@@ -64,7 +75,7 @@
   }
 
   .submit-button {
-    @apply w-full mt-4 p-3 text-base rounded-lg bg-gray-800 text-white border border-transparent font-medium cursor-pointer transition-colors;
+    @apply w-full mt-4 p-3 text-base rounded-lg bg-gray-800 dark:bg-gray-800 text-white border border-transparent font-medium cursor-pointer transition-colors;
   }
 
   .submit-button:hover {
@@ -153,5 +164,3 @@
   }
 }
 
-/* Import remaining movie styles - will migrate these gradually */
-@import url('./styles/movies.css');
