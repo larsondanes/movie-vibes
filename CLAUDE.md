@@ -2,3 +2,5 @@
 - When working from the implementation plan implement a step, test and validate it, commit the changes, and move on to the next step
 - Default to using yarn instead of npm
 - Whenever possible, enshrine new functionality like backend business logic or frontend components via unit tests
+- The implementation plan is located in the project root in the file called implementation-plan.md
+- Review CLAUDE.md after compacting and respect project memory
