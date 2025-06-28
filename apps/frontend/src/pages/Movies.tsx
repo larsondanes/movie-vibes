@@ -1,8 +1,8 @@
 import React from 'react';
-import MovieSearchDemo from '../components/MovieSearchDemo';
+import MoviesPage from '../components/MoviesPage';
 
 const Movies: React.FC = () => {
-  return <MovieSearchDemo />;
+  return <MoviesPage />;
 };
 
 export default Movies;
