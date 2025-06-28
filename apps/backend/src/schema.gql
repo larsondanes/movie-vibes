@@ -2,6 +2,28 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type User {
+  id: ID!
+  email: String!
+  username: String!
+  displayName: String
+  avatar: String
+  bio: String
+  verified: Boolean!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type AuthPayload {
+  access_token: String!
+  user: User!
+}
+
 type Movie {
   id: ID!
   tmdbId: Int!
@@ -18,11 +40,6 @@ type Movie {
   posterUrl: String
   backdropUrl: String
 }
-
-"""
-A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
-"""
-scalar DateTime
 
 type ProductionCompany {
   id: Int!
@@ -131,6 +148,10 @@ type MovieSearchResult {
 }
 
 type Query {
+  me: User!
+  users: [User!]!
+  user(id: String!): User!
+  userByUsername(username: String!): User!
   searchMovies(searchInput: SearchMoviesInput!): MovieSearchResult!
   popularMovies(page: Int = 1): MovieSearchResult!
   nowPlayingMovies(page: Int = 1): MovieSearchResult!
@@ -147,4 +168,32 @@ type Query {
 input SearchMoviesInput {
   query: String!
   page: Int = 1
+}
+
+type Mutation {
+  register(registerInput: RegisterInput!): AuthPayload!
+  login(loginInput: LoginInput!): AuthPayload!
+  createUser(createUserInput: CreateUserInput!): User!
+}
+
+input RegisterInput {
+  email: String!
+  username: String!
+  displayName: String
+  password: String!
+  bio: String
+}
+
+input LoginInput {
+  email: String!
+  password: String!
+}
+
+input CreateUserInput {
+  email: String!
+  username: String!
+  displayName: String
+  password: String!
+  bio: String
+  avatar: String
 }
