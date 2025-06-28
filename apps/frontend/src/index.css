@@ -1,9 +1,8 @@
-@tailwind base;
-@tailwind components;
-
 /* Import legacy movie styles (will be gradually migrated) */
 @import url('./styles/movies.css');
 
+@tailwind base;
+@tailwind components;
 @tailwind utilities;
 
 /* Custom CSS Layer for Movie-Specific Patterns */
