@@ -5,7 +5,12 @@ import { TMDbService } from '../../tmdb/tmdb.service';
 
 describe('MoviesService - Movie Details', () => {
   let service: MoviesService;
-  let prisma: jest.Mocked<PrismaClient>;
+  let prisma: {
+    movie: {
+      findUnique: jest.MockedFunction<any>;
+      create: jest.MockedFunction<any>;
+    };
+  };
   let tmdbService: jest.Mocked<TMDbService>;
 
   const mockTMDbMovieDetails = {
