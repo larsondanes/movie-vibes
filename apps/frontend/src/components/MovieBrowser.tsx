@@ -115,21 +115,23 @@ const MovieBrowser: React.FC<MovieBrowserProps> = ({
       </div>
 
       {/* Category Tabs */}
-      <div className="flex flex-col sm:flex-row gap-4">
+      <div className="flex justify-center gap-4 flex-wrap">
         {categories.map(category => (
           <button
             key={category.id}
             onClick={() => handleCategoryChange(category.id)}
-            className={`flex items-center gap-3 p-4 rounded-xl border transition-all duration-300 ${
+            className={`flex items-center gap-3 px-6 py-4 rounded-xl border backdrop-blur-md transition-all duration-300 hover:transform hover:-translate-y-0.5 ${
               activeCategory === category.id
-                ? 'bg-primary-500/20 border-primary-400/30 text-white shadow-lg'
-                : 'bg-white/5 border-white/10 text-white/80 hover:bg-white/10 hover:border-white/20'
+                ? 'bg-white text-primary-600 border-white/30 shadow-lg shadow-black/10'
+                : 'bg-white/10 border-white/20 text-white hover:bg-white/20 hover:border-white/30'
             }`}
             aria-pressed={activeCategory === category.id}
           >
             <span className="text-2xl">{category.icon}</span>
             <div className="text-left">
-              <span className="block font-semibold">{category.label}</span>
+              <span className="block font-semibold text-base">
+                {category.label}
+              </span>
               <span className="block text-sm opacity-70">
                 {category.description}
               </span>
@@ -161,11 +163,11 @@ const MovieBrowser: React.FC<MovieBrowserProps> = ({
         {movieData && !loading && (
           <>
             {/* Results Header */}
-            <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-xl p-6">
+            <div className="text-center mb-6">
               <h3 className="text-2xl font-bold text-white mb-2">
                 {activeConfig.icon} {activeConfig.label}
               </h3>
-              <p className="text-white/70">
+              <p className="text-white/80 text-lg">
                 {movieData.totalResults.toLocaleString()} movies available
               </p>
             </div>
@@ -199,7 +201,7 @@ const MovieBrowser: React.FC<MovieBrowserProps> = ({
             </p>
             <button
               onClick={handleRetry}
-              className="px-6 py-3 bg-primary-500 hover:bg-primary-600 text-white font-medium rounded-lg transition-colors duration-200"
+              className="px-6 py-3 bg-primary-500 hover:bg-primary-600 text-white font-medium rounded-lg transition-all duration-200 hover:transform hover:-translate-y-0.5 shadow-lg hover:shadow-xl"
             >
               Try Again
             </button>

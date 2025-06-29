@@ -26,9 +26,9 @@ const MoviesPage: React.FC = () => {
             <div className="flex bg-white/10 rounded-xl p-1 backdrop-blur-md border border-white/20">
               <button
                 onClick={() => setActiveView('browse')}
-                className={`flex items-center gap-2 px-4 py-3 rounded-lg font-medium transition-all duration-300 ${
+                className={`flex items-center gap-2 px-4 py-3 rounded-lg font-medium transition-all duration-200 ${
                   activeView === 'browse'
-                    ? 'bg-primary-500 text-white shadow-lg'
+                    ? 'bg-white text-primary-600 shadow-md'
                     : 'text-white/80 hover:text-white hover:bg-white/10'
                 }`}
                 aria-pressed={activeView === 'browse'}
@@ -53,9 +53,9 @@ const MoviesPage: React.FC = () => {
 
               <button
                 onClick={() => setActiveView('search')}
-                className={`flex items-center gap-2 px-4 py-3 rounded-lg font-medium transition-all duration-300 ${
+                className={`flex items-center gap-2 px-4 py-3 rounded-lg font-medium transition-all duration-200 ${
                   activeView === 'search'
-                    ? 'bg-primary-500 text-white shadow-lg'
+                    ? 'bg-white text-primary-600 shadow-md'
                     : 'text-white/80 hover:text-white hover:bg-white/10'
                 }`}
                 aria-pressed={activeView === 'search'}
