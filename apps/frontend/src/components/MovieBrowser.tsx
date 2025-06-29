@@ -103,38 +103,47 @@ const MovieBrowser: React.FC<MovieBrowserProps> = ({
   };
 
   return (
-    <div className={`movie-browser ${className}`}>
-      <div className="browser-header">
-        <h2 className="browser-title">Discover Movies</h2>
-        <p className="browser-subtitle">
+    <div className={`space-y-8 ${className}`}>
+      {/* Header Section */}
+      <div className="text-center space-y-4">
+        <h2 className="text-3xl md:text-4xl font-bold text-white">
+          Discover Movies
+        </h2>
+        <p className="text-lg text-white/80 max-w-2xl mx-auto">
           Explore the latest and greatest films from around the world
         </p>
       </div>
 
-      <div className="category-tabs">
+      {/* Category Tabs */}
+      <div className="flex flex-col sm:flex-row gap-4">
         {categories.map(category => (
           <button
             key={category.id}
             onClick={() => handleCategoryChange(category.id)}
-            className={`category-tab ${
-              activeCategory === category.id ? 'active' : ''
+            className={`flex items-center gap-3 p-4 rounded-xl border transition-all duration-300 ${
+              activeCategory === category.id
+                ? 'bg-primary-500/20 border-primary-400/30 text-white shadow-lg'
+                : 'bg-white/5 border-white/10 text-white/80 hover:bg-white/10 hover:border-white/20'
             }`}
             aria-pressed={activeCategory === category.id}
           >
-            <span className="tab-icon">{category.icon}</span>
-            <div className="tab-content">
-              <span className="tab-label">{category.label}</span>
-              <span className="tab-description">{category.description}</span>
+            <span className="text-2xl">{category.icon}</span>
+            <div className="text-left">
+              <span className="block font-semibold">{category.label}</span>
+              <span className="block text-sm opacity-70">
+                {category.description}
+              </span>
             </div>
           </button>
         ))}
       </div>
 
-      <div className="browser-content">
+      {/* Content Section */}
+      <div className="space-y-6">
         {loading && (
-          <div className="loading-container">
+          <div className="flex flex-col items-center justify-center py-16 space-y-4">
             <LoadingSpinner size="large" />
-            <p className="loading-text">
+            <p className="text-xl text-white/80 font-medium">
               Loading {activeConfig.label.toLowerCase()} movies...
             </p>
           </div>
@@ -145,45 +154,53 @@ const MovieBrowser: React.FC<MovieBrowserProps> = ({
             title="Failed to Load Movies"
             message={`Unable to load ${activeConfig.label.toLowerCase()} movies. Please try again.`}
             onRetry={handleRetry}
-            className="browser-error"
+            className="max-w-lg mx-auto"
           />
         )}
 
         {movieData && !loading && (
           <>
-            <div className="results-header">
-              <h3 className="results-title">
+            {/* Results Header */}
+            <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-xl p-6">
+              <h3 className="text-2xl font-bold text-white mb-2">
                 {activeConfig.icon} {activeConfig.label}
               </h3>
-              <p className="results-count">
+              <p className="text-white/70">
                 {movieData.totalResults.toLocaleString()} movies available
               </p>
             </div>
 
+            {/* Movie Grid */}
             <MovieGrid
               movies={movieData.movies}
               onMovieClick={handleMovieClick}
-              className="browser-grid"
+              className=""
             />
 
+            {/* Pagination */}
             {movieData.totalPages > 1 && (
               <Pagination
                 currentPage={currentPage}
                 totalPages={movieData.totalPages}
                 totalResults={movieData.totalResults}
                 onPageChange={handlePageChange}
-                className="browser-pagination"
+                className=""
               />
             )}
           </>
         )}
 
         {!loading && !error && !movieData && (
-          <div className="no-data">
-            <div className="no-data-icon">🎭</div>
-            <h3>No Movies Found</h3>
-            <p>We couldn't find any movies in this category.</p>
-            <button onClick={handleRetry} className="retry-btn">
+          <div className="flex flex-col items-center justify-center py-16 space-y-6 text-center">
+            <div className="text-6xl opacity-50">🎭</div>
+            <h3 className="text-2xl font-bold text-white">No Movies Found</h3>
+            <p className="text-white/70 max-w-md">
+              We couldn't find any movies in this category.
+            </p>
+            <button
+              onClick={handleRetry}
+              className="px-6 py-3 bg-primary-500 hover:bg-primary-600 text-white font-medium rounded-lg transition-colors duration-200"
+            >
               Try Again
             </button>
           </div>
