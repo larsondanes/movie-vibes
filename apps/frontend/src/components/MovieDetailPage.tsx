@@ -79,9 +79,11 @@ const MovieDetailPage: React.FC = () => {
 
   if (detailsLoading) {
     return (
-      <div className="movie-detail-loading">
+      <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 flex flex-col items-center justify-center px-4">
         <LoadingSpinner size="large" />
-        <p className="loading-text">Loading movie details...</p>
+        <p className="mt-6 text-xl text-white/80 font-medium">
+          Loading movie details...
+        </p>
       </div>
     );
   }
@@ -103,31 +105,33 @@ const MovieDetailPage: React.FC = () => {
     similarData?.similarMovies;
 
   return (
-    <div className="movie-detail-page">
+    <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900">
       <MovieDetailHeader movie={movie} />
 
-      <div className="movie-detail-content">
-        <div className="main-content">
-          <MovieDetailInfo movie={movie} />
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
+          <div className="xl:col-span-2 space-y-8">
+            <MovieDetailInfo movie={movie} />
 
-          {credits && (
-            <MovieCastCrew credits={credits} loading={creditsLoading} />
-          )}
+            {credits && (
+              <MovieCastCrew credits={credits} loading={creditsLoading} />
+            )}
 
-          {videos && videos.results.length > 0 && (
-            <MovieVideosSection videos={videos} loading={videosLoading} />
-          )}
+            {videos && videos.results.length > 0 && (
+              <MovieVideosSection videos={videos} loading={videosLoading} />
+            )}
+          </div>
+
+          <aside className="xl:col-span-1">
+            {similarMovies && similarMovies.movies.length > 0 && (
+              <MovieRecommendations
+                movies={similarMovies.movies}
+                title="Similar Movies"
+                loading={similarLoading}
+              />
+            )}
+          </aside>
         </div>
-
-        <aside className="sidebar-content">
-          {similarMovies && similarMovies.movies.length > 0 && (
-            <MovieRecommendations
-              movies={similarMovies.movies}
-              title="Similar Movies"
-              loading={similarLoading}
-            />
-          )}
-        </aside>
       </div>
     </div>
   );
