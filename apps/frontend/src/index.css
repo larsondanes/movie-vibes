@@ -1,5 +1,4 @@
-/* Import legacy movie styles (will be gradually migrated) */
-@import url('./styles/movies.css');
+/* All legacy movie styles have been migrated to Tailwind CSS */
 
 @tailwind base;
 @tailwind components;
@@ -45,91 +44,11 @@
 }
 
 @layer components {
-  /* Auth Form Components */
-  .auth-form-container {
-    @apply max-w-sm mx-auto mt-8;
-  }
-
-  .auth-form {
-    @apply bg-white/5 p-8 rounded-lg border border-white/10;
-  }
-
-  .auth-form h2 {
-    @apply mb-6 text-2xl;
-  }
-
-  .form-group {
-    @apply mb-4 text-left;
-  }
-
-  .form-group label {
-    @apply block mb-2 font-medium;
-  }
-
-  .form-group input {
-    @apply w-full p-3 border border-white/20 rounded bg-white/5 text-inherit text-base box-border;
-  }
-
-  .form-group input:focus {
-    @apply outline-none border-primary-500 ring-2 ring-primary-500/20;
-  }
-
-  .submit-button {
-    @apply w-full mt-4 p-3 text-base rounded-lg bg-gray-800 dark:bg-gray-800 text-white border border-transparent font-medium cursor-pointer transition-colors;
-  }
-
-  .submit-button:hover {
-    @apply border-primary-500;
-  }
-
-  .submit-button:disabled {
-    @apply opacity-60 cursor-not-allowed;
-  }
-
-  .error-message {
-    @apply bg-error-500/10 text-red-300 p-3 rounded mb-4 border border-error-500/20;
-  }
-
-  .auth-links {
-    @apply text-center mt-4;
-  }
-
-  .auth-links a {
-    @apply text-primary-500 no-underline;
-  }
-
-  .auth-links a:hover {
-    @apply underline;
-  }
-
-  /* Navigation Components */
-  .navigation {
-    @apply flex justify-between items-center p-4 px-8 border-b border-gray-700;
-  }
-
-  .nav-brand a {
-    @apply text-2xl font-bold no-underline;
-  }
-
-  .nav-links {
-    @apply flex gap-4;
-  }
-
-  .nav-links a {
-    @apply no-underline p-2 px-4 rounded transition-colors;
-  }
-
-  .nav-links a:hover {
-    @apply bg-primary-500/10;
-  }
-
-  /* App Layout */
+  /* All legacy component styles have been migrated to individual Tailwind components */
+  
+  /* App Layout - Keep only essential styles not yet migrated */
   .app {
     @apply mx-auto min-h-screen;
-  }
-
-  .main-content {
-    @apply p-8 text-center;
   }
 
   .loading {
