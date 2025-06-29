@@ -120,10 +120,10 @@ const MovieBrowser: React.FC<MovieBrowserProps> = ({
           <button
             key={category.id}
             onClick={() => handleCategoryChange(category.id)}
-            className={`flex items-center gap-3 px-6 py-4 rounded-xl border backdrop-blur-md transition-all duration-300 hover:transform hover:-translate-y-0.5 ${
+            className={`flex items-center gap-3 px-6 py-4 rounded-xl border backdrop-blur-lg transition-all duration-300 hover:transform hover:-translate-y-0.5 shadow-lg ${
               activeCategory === category.id
-                ? 'bg-white text-primary-600 border-white/30 shadow-lg shadow-black/10'
-                : 'bg-white/10 border-white/20 text-white hover:bg-white/20 hover:border-white/30'
+                ? 'bg-white/95 text-primary-600 border-white/40 shadow-xl shadow-black/20 backdrop-blur-xl'
+                : 'bg-white/10 border-white/20 text-white hover:bg-white/20 hover:border-white/30 shadow-md shadow-black/10 hover:shadow-lg hover:shadow-black/15'
             }`}
             aria-pressed={activeCategory === category.id}
           >
