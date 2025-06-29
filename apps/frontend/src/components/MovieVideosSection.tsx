@@ -16,11 +16,14 @@ const MovieVideosSection: React.FC<MovieVideosSectionProps> = ({
 
   if (loading) {
     return (
-      <section className="videos-section">
-        <h2>Videos & Trailers</h2>
-        <div className="loading-container">
+      <section className="bg-white/5 rounded-xl p-6 backdrop-blur-md border border-white/10 my-8">
+        <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">
+          <span>🎬</span>
+          Videos & Trailers
+        </h2>
+        <div className="flex flex-col items-center gap-4 py-12">
           <LoadingSpinner size="medium" />
-          <p>Loading videos...</p>
+          <p className="text-white/80">Loading videos...</p>
         </div>
       </section>
     );
@@ -86,35 +89,45 @@ const MovieVideosSection: React.FC<MovieVideosSectionProps> = ({
   };
 
   return (
-    <section className="videos-section">
-      <div className="section-header">
-        <h2>Videos & Trailers</h2>
-        <span className="video-count">{sortedVideos.length} videos</span>
+    <section className="bg-white/5 rounded-xl p-6 backdrop-blur-md border border-white/10 my-8">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+        <h2 className="text-2xl font-bold text-white flex items-center gap-2">
+          <span>🎬</span>
+          Videos & Trailers
+        </h2>
+        <span className="text-sm font-medium text-white/70 bg-white/10 px-3 py-1 rounded-full">
+          {sortedVideos.length} videos
+        </span>
       </div>
 
-      <div className="videos-content">
+      <div className="space-y-8">
         {featuredVideo && (
-          <div className="featured-video">
-            <div className="video-player">
+          <div className="bg-white/5 rounded-xl border border-white/10 overflow-hidden">
+            <div className="relative aspect-video bg-black">
               <iframe
                 src={getYouTubeEmbedUrl(featuredVideo.key)}
                 title={featuredVideo.name}
                 frameBorder="0"
                 allowFullScreen
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                className="video-iframe"
+                className="absolute inset-0 w-full h-full"
               />
             </div>
-            <div className="featured-video-info">
-              <h3 className="video-title">{featuredVideo.name}</h3>
-              <div className="video-meta">
-                <span className="video-type">
+            <div className="p-4">
+              <h3 className="text-lg font-semibold text-white mb-2 line-clamp-2">
+                {featuredVideo.name}
+              </h3>
+              <div className="flex flex-wrap items-center gap-2 text-sm">
+                <span className="px-2 py-1 bg-primary-500/20 text-primary-300 rounded-full font-medium border border-primary-500/30">
                   {formatVideoType(featuredVideo.type)}
                 </span>
                 {featuredVideo.official && (
-                  <span className="official-badge">Official</span>
+                  <span className="px-2 py-1 bg-green-500/20 text-green-300 rounded-full font-medium border border-green-500/30 flex items-center gap-1">
+                    <span>✓</span>
+                    Official
+                  </span>
                 )}
-                <span className="video-date">
+                <span className="text-white/60">
                   {formatDate(featuredVideo.publishedAt)}
                 </span>
               </div>
@@ -123,13 +136,17 @@ const MovieVideosSection: React.FC<MovieVideosSectionProps> = ({
         )}
 
         {sortedVideos.length > 1 && (
-          <div className="video-list">
-            <h3>All Videos</h3>
-            <div className="video-thumbnails">
+          <div className="space-y-6">
+            <h3 className="text-xl font-semibold text-white">All Videos</h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {displayedVideos.map(video => (
                 <div
                   key={video.id}
-                  className={`video-thumbnail ${selectedVideo?.id === video.id ? 'active' : ''}`}
+                  className={`bg-white/5 rounded-lg border transition-all duration-300 cursor-pointer hover:bg-white/10 hover:transform hover:-translate-y-1 hover:shadow-lg ${
+                    selectedVideo?.id === video.id
+                      ? 'border-primary-500 bg-primary-500/10'
+                      : 'border-white/10'
+                  }`}
                   onClick={() => setSelectedVideo(video)}
                   role="button"
                   tabIndex={0}
@@ -140,24 +157,29 @@ const MovieVideosSection: React.FC<MovieVideosSectionProps> = ({
                     }
                   }}
                 >
-                  <div className="thumbnail-image">
+                  <div className="relative">
                     <img
                       src={getYouTubeThumbnail(video.key)}
                       alt={video.name}
                       loading="lazy"
+                      className="w-full aspect-video object-cover rounded-t-lg"
                     />
-                    <div className="play-overlay">
-                      <span className="play-icon">▶️</span>
+                    <div className="absolute inset-0 bg-black/40 flex items-center justify-center rounded-t-lg transition-opacity duration-300 hover:bg-black/30">
+                      <div className="w-16 h-16 bg-red-600 rounded-full flex items-center justify-center shadow-lg">
+                        <span className="text-white text-xl ml-1">▶</span>
+                      </div>
                     </div>
                   </div>
-                  <div className="thumbnail-info">
-                    <h4 className="thumbnail-title">{video.name}</h4>
-                    <div className="thumbnail-meta">
-                      <span className="thumbnail-type">
+                  <div className="p-3">
+                    <h4 className="font-semibold text-white text-sm mb-2 line-clamp-2 leading-tight">
+                      {video.name}
+                    </h4>
+                    <div className="flex items-center gap-2 text-xs">
+                      <span className="px-2 py-1 bg-blue-500/20 text-blue-300 rounded-full font-medium">
                         {formatVideoType(video.type)}
                       </span>
                       {video.official && (
-                        <span className="official-indicator">✓</span>
+                        <span className="text-green-400 font-medium">✓</span>
                       )}
                     </div>
                   </div>
@@ -166,20 +188,20 @@ const MovieVideosSection: React.FC<MovieVideosSectionProps> = ({
             </div>
 
             {sortedVideos.length > 6 && (
-              <div className="show-more-container">
+              <div className="flex justify-center">
                 <button
                   onClick={() => setShowAllVideos(!showAllVideos)}
-                  className="show-more-btn"
+                  className="flex items-center gap-2 px-6 py-3 bg-primary-500 hover:bg-primary-600 text-white font-medium rounded-lg transition-all duration-300 hover:transform hover:-translate-y-1 hover:shadow-lg"
                 >
                   {showAllVideos ? (
                     <>
                       <span>Show Less</span>
-                      <span className="btn-icon">⬆️</span>
+                      <span>⬆️</span>
                     </>
                   ) : (
                     <>
                       <span>Show All {sortedVideos.length} Videos</span>
-                      <span className="btn-icon">⬇️</span>
+                      <span>⬇️</span>
                     </>
                   )}
                 </button>

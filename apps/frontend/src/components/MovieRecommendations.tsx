@@ -20,11 +20,16 @@ const MovieRecommendations: React.FC<MovieRecommendationsProps> = ({
 
   if (loading) {
     return (
-      <section className={`recommendations-section ${className}`}>
-        <h2>{title}</h2>
-        <div className="loading-container">
+      <section
+        className={`bg-white/5 rounded-xl p-6 backdrop-blur-md border border-white/10 my-8 ${className}`}
+      >
+        <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">
+          <span>🎬</span>
+          {title}
+        </h2>
+        <div className="flex flex-col items-center gap-4 py-12">
           <LoadingSpinner size="medium" />
-          <p>Loading recommendations...</p>
+          <p className="text-white/80">Loading recommendations...</p>
         </div>
       </section>
     );
@@ -32,10 +37,17 @@ const MovieRecommendations: React.FC<MovieRecommendationsProps> = ({
 
   if (!movies || movies.length === 0) {
     return (
-      <section className={`recommendations-section ${className}`}>
-        <h2>{title}</h2>
-        <div className="no-recommendations">
-          <p>No recommendations available at this time.</p>
+      <section
+        className={`bg-white/5 rounded-xl p-6 backdrop-blur-md border border-white/10 my-8 ${className}`}
+      >
+        <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">
+          <span>🎬</span>
+          {title}
+        </h2>
+        <div className="text-center py-12">
+          <p className="text-white/70 text-lg">
+            No recommendations available at this time.
+          </p>
         </div>
       </section>
     );
@@ -46,11 +58,13 @@ const MovieRecommendations: React.FC<MovieRecommendationsProps> = ({
   };
 
   const getRatingColor = (rating?: number) => {
-    if (!rating) return 'rating-unknown';
-    if (rating >= 8) return 'rating-excellent';
-    if (rating >= 7) return 'rating-good';
-    if (rating >= 6) return 'rating-fair';
-    return 'rating-poor';
+    if (!rating) return 'bg-gray-500/20 text-gray-400 border-gray-500/30';
+    if (rating >= 8)
+      return 'bg-green-500/20 text-green-400 border-green-500/30';
+    if (rating >= 7) return 'bg-blue-500/20 text-blue-400 border-blue-500/30';
+    if (rating >= 6)
+      return 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30';
+    return 'bg-red-500/20 text-red-400 border-red-500/30';
   };
 
   const formatDate = (dateString?: string) => {
@@ -59,17 +73,24 @@ const MovieRecommendations: React.FC<MovieRecommendationsProps> = ({
   };
 
   return (
-    <section className={`recommendations-section ${className}`}>
-      <div className="section-header">
-        <h2>{title}</h2>
-        <span className="movie-count">{movies.length} movies</span>
+    <section
+      className={`bg-white/5 rounded-xl p-6 backdrop-blur-md border border-white/10 my-8 ${className}`}
+    >
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+        <h2 className="text-2xl font-bold text-white flex items-center gap-2">
+          <span>🎬</span>
+          {title}
+        </h2>
+        <span className="text-sm font-medium text-white/70 bg-white/10 px-3 py-1 rounded-full">
+          {movies.length} movies
+        </span>
       </div>
 
-      <div className="recommendations-grid">
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 mb-6">
         {movies.map(movie => (
           <div
             key={movie.id}
-            className="recommendation-card"
+            className="bg-white/5 rounded-lg border border-white/10 overflow-hidden cursor-pointer transition-all duration-300 hover:bg-white/10 hover:transform hover:-translate-y-2 hover:shadow-2xl group"
             onClick={() => handleMovieClick(movie)}
             role="button"
             tabIndex={0}
@@ -80,68 +101,71 @@ const MovieRecommendations: React.FC<MovieRecommendationsProps> = ({
               }
             }}
           >
-            <div className="recommendation-poster">
+            <div className="relative aspect-poster">
               {movie.posterUrl ? (
                 <img
                   src={movie.posterUrl}
                   alt={`${movie.title} poster`}
-                  className="poster-image"
+                  className="w-full h-full object-cover"
                   loading="lazy"
                 />
               ) : (
-                <div className="poster-placeholder">
-                  <span className="poster-icon">🎬</span>
+                <div className="w-full h-full bg-white/10 flex items-center justify-center">
+                  <span className="text-6xl opacity-60">🎬</span>
                 </div>
               )}
 
               {movie.voteAverage && (
                 <div
-                  className={`rating-badge ${getRatingColor(movie.voteAverage)}`}
+                  className={`absolute top-2 left-2 px-2 py-1 rounded-full text-xs font-medium border flex items-center gap-1 ${getRatingColor(movie.voteAverage)}`}
                 >
-                  <span className="rating-stars">⭐</span>
-                  <span className="rating-value">
-                    {(movie.voteAverage / 2).toFixed(1)}
-                  </span>
+                  <span>⭐</span>
+                  <span>{(movie.voteAverage / 2).toFixed(1)}</span>
                 </div>
               )}
 
-              <div className="hover-overlay">
-                <div className="overlay-content">
-                  <span className="view-details">View Details</span>
-                  <div className="play-icon">
-                    <span>▶️</span>
+              <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                <div className="text-center text-white">
+                  <div className="mb-2">
+                    <span className="text-sm font-medium">View Details</span>
+                  </div>
+                  <div className="w-12 h-12 bg-primary-500 rounded-full flex items-center justify-center mx-auto">
+                    <span className="text-xl ml-1">▶</span>
                   </div>
                 </div>
               </div>
             </div>
 
-            <div className="recommendation-info">
-              <h3 className="movie-title" title={movie.title}>
+            <div className="p-3">
+              <h3
+                className="font-semibold text-white text-sm mb-2 line-clamp-2 leading-tight"
+                title={movie.title}
+              >
                 {movie.title}
               </h3>
 
-              <div className="movie-meta">
-                <span className="release-year">
-                  {formatDate(movie.releaseDate)}
-                </span>
+              <div className="flex items-center gap-2 text-xs text-white/60 mb-2">
+                <span>{formatDate(movie.releaseDate)}</span>
                 {movie.runtime && (
                   <>
-                    <span className="meta-separator">•</span>
-                    <span className="runtime">{movie.runtime}m</span>
+                    <span>•</span>
+                    <span>{movie.runtime}m</span>
                   </>
                 )}
               </div>
 
               {movie.genres && movie.genres.length > 0 && (
-                <div className="movie-genres">
-                  {movie.genres.slice(0, 2).map((genre, index) => (
-                    <span key={genre} className="genre-tag">
+                <div className="flex flex-wrap gap-1 mb-2">
+                  {movie.genres.slice(0, 2).map((genre, _index) => (
+                    <span
+                      key={genre}
+                      className="px-2 py-1 bg-blue-500/20 text-blue-300 rounded-full text-xs font-medium"
+                    >
                       {genre}
-                      {index < Math.min(movie.genres.length, 2) - 1 && ', '}
                     </span>
                   ))}
                   {movie.genres.length > 2 && (
-                    <span className="more-genres">
+                    <span className="px-2 py-1 bg-white/10 text-white/60 rounded-full text-xs">
                       +{movie.genres.length - 2}
                     </span>
                   )}
@@ -149,7 +173,10 @@ const MovieRecommendations: React.FC<MovieRecommendationsProps> = ({
               )}
 
               {movie.overview && (
-                <p className="movie-overview" title={movie.overview}>
+                <p
+                  className="text-white/70 text-xs leading-relaxed line-clamp-3"
+                  title={movie.overview}
+                >
                   {movie.overview.length > 80
                     ? `${movie.overview.substring(0, 80)}...`
                     : movie.overview}
@@ -160,8 +187,10 @@ const MovieRecommendations: React.FC<MovieRecommendationsProps> = ({
         ))}
       </div>
 
-      <div className="view-more-container">
-        <button className="view-more-btn">View More {title}</button>
+      <div className="flex justify-center mt-6">
+        <button className="flex items-center gap-2 px-6 py-3 bg-primary-500 hover:bg-primary-600 text-white font-medium rounded-lg transition-all duration-300 hover:transform hover:-translate-y-1 hover:shadow-lg">
+          View More {title}
+        </button>
       </div>
     </section>
   );
