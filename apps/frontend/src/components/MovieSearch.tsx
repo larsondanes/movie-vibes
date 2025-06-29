@@ -107,33 +107,46 @@ const MovieSearch: React.FC<MovieSearchProps> = ({ className = '' }) => {
   };
 
   return (
-    <div className={`movie-search ${className}`}>
-      <div className="search-header">
+    <div className={`space-y-8 ${className}`}>
+      {/* Search Header */}
+      <div className="space-y-6">
         <SearchBar
           value={searchQuery}
           onSearch={handleSearch}
           onClear={handleClearSearch}
           placeholder="Search for movies..."
-          className="search-bar"
+          className=""
         />
 
         {hasSearched && searchResults && !loading && (
-          <div className="search-info">
-            <p className="results-count">
-              Found {searchResults.totalResults.toLocaleString()} movies
+          <div className="bg-white/5 rounded-xl p-4 backdrop-blur-md border border-white/10">
+            <p className="text-white font-medium text-center">
+              Found{' '}
+              <span className="text-accent-400 font-bold">
+                {searchResults.totalResults.toLocaleString()}
+              </span>{' '}
+              movies
               {searchQuery && (
-                <span className="search-term"> for "{searchQuery}"</span>
+                <>
+                  {' '}
+                  for{' '}
+                  <span className="text-primary-400 font-semibold">
+                    "{searchQuery}"
+                  </span>
+                </>
               )}
             </p>
           </div>
         )}
       </div>
 
-      <div className="search-content">
+      {/* Search Content */}
+      <div className="space-y-8">
+        {/* Loading State */}
         {loading && (
-          <div className="loading-container">
+          <div className="flex flex-col items-center gap-6 py-16">
             <LoadingSpinner size="large" />
-            <p className="loading-text">
+            <p className="text-white/80 text-lg font-medium">
               {currentPage === 1
                 ? 'Searching movies...'
                 : 'Loading more results...'}
@@ -141,36 +154,50 @@ const MovieSearch: React.FC<MovieSearchProps> = ({ className = '' }) => {
           </div>
         )}
 
+        {/* Error State */}
         {error && (
-          <ErrorMessage
-            title="Search Failed"
-            message="Unable to search movies. Please try again."
-            onRetry={() => handleSearch(searchQuery)}
-            className="search-error"
-          />
+          <div className="max-w-md mx-auto">
+            <ErrorMessage
+              title="Search Failed"
+              message="Unable to search movies. Please try again."
+              onRetry={() => handleSearch(searchQuery)}
+              className=""
+            />
+          </div>
         )}
 
+        {/* Empty Results */}
         {isEmpty && (
-          <div className="empty-results">
-            <div className="empty-icon">🎬</div>
-            <h3>No movies found</h3>
-            <p>
-              We couldn't find any movies matching "{searchQuery}".
+          <div className="bg-white/5 rounded-xl p-12 backdrop-blur-md border border-white/10 text-center max-w-2xl mx-auto">
+            <div className="text-8xl mb-6 opacity-60">🎬</div>
+            <h3 className="text-2xl font-bold text-white mb-4">
+              No movies found
+            </h3>
+            <p className="text-white/70 text-lg mb-8 leading-relaxed">
+              We couldn't find any movies matching{' '}
+              <span className="text-primary-400 font-semibold">
+                "{searchQuery}"
+              </span>
+              .
               <br />
               Try adjusting your search terms or check for typos.
             </p>
-            <button onClick={handleClearSearch} className="clear-search-btn">
+            <button
+              onClick={handleClearSearch}
+              className="px-6 py-3 bg-primary-500 hover:bg-primary-600 text-white font-medium rounded-lg transition-all duration-300 hover:transform hover:-translate-y-1 hover:shadow-lg"
+            >
               Clear Search
             </button>
           </div>
         )}
 
+        {/* Search Results */}
         {searchResults && searchResults.movies.length > 0 && !loading && (
-          <>
+          <div className="space-y-8">
             <MovieGrid
               movies={searchResults.movies}
               onMovieClick={handleMovieClick}
-              className="search-results-grid"
+              className=""
             />
 
             {searchResults.totalPages > 1 && (
@@ -179,30 +206,33 @@ const MovieSearch: React.FC<MovieSearchProps> = ({ className = '' }) => {
                 totalPages={searchResults.totalPages}
                 totalResults={searchResults.totalResults}
                 onPageChange={handlePageChange}
-                className="search-pagination"
+                className=""
               />
             )}
-          </>
+          </div>
         )}
 
+        {/* Search Placeholder (Initial State) */}
         {!hasSearched && (
-          <div className="search-placeholder">
-            <div className="placeholder-icon">🔍</div>
-            <h3>Discover Amazing Movies</h3>
-            <p>
+          <div className="bg-white/5 rounded-xl p-12 backdrop-blur-md border border-white/10 text-center max-w-2xl mx-auto">
+            <div className="text-8xl mb-6 opacity-60">🔍</div>
+            <h3 className="text-2xl font-bold text-white mb-4">
+              Discover Amazing Movies
+            </h3>
+            <p className="text-white/70 text-lg mb-8 leading-relaxed">
               Search through thousands of movies to find your next favorite.
               <br />
               Enter a movie title, actor, or keyword to get started.
             </p>
-            <div className="search-suggestions">
-              <p className="suggestions-label">Try searching for:</p>
-              <div className="suggestion-buttons">
+            <div className="space-y-4">
+              <p className="text-white/60 font-medium">Try searching for:</p>
+              <div className="flex flex-wrap justify-center gap-3">
                 {['Marvel', 'Inception', 'Studio Ghibli', 'Comedy 2023'].map(
                   suggestion => (
                     <button
                       key={suggestion}
                       onClick={() => handleSearch(suggestion)}
-                      className="suggestion-btn"
+                      className="px-4 py-2 bg-white/10 hover:bg-white/20 text-white font-medium rounded-lg transition-all duration-300 hover:transform hover:-translate-y-1 hover:shadow-lg border border-white/20"
                     >
                       {suggestion}
                     </button>
