@@ -92,9 +92,16 @@ const SearchBar: React.FC<SearchBarProps> = ({
   const showClearButton = inputValue.length > 0;
 
   return (
-    <form onSubmit={handleSubmit} className={`search-bar ${className}`}>
-      <div className={`search-input-container ${isFocused ? 'focused' : ''}`}>
-        <div className="search-icon">
+    <form onSubmit={handleSubmit} className={`space-y-3 ${className}`}>
+      <div
+        className={`relative bg-white/10 backdrop-blur-md border border-white/20 rounded-xl transition-all duration-300 ${
+          isFocused
+            ? 'ring-2 ring-primary-500/50 border-primary-500/50'
+            : 'hover:border-white/30'
+        }`}
+      >
+        {/* Search Icon */}
+        <div className="absolute left-4 top-1/2 transform -translate-y-1/2 pointer-events-none">
           <svg
             width="20"
             height="20"
@@ -104,12 +111,14 @@ const SearchBar: React.FC<SearchBarProps> = ({
             strokeWidth="2"
             strokeLinecap="round"
             strokeLinejoin="round"
+            className="text-white/60"
           >
             <circle cx="11" cy="11" r="8" />
             <path d="m21 21-4.35-4.35" />
           </svg>
         </div>
 
+        {/* Input Field */}
         <input
           ref={inputRef}
           type="text"
@@ -119,17 +128,47 @@ const SearchBar: React.FC<SearchBarProps> = ({
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
           placeholder={placeholder}
-          className="search-input"
+          className="w-full h-14 pl-12 pr-20 bg-transparent text-white placeholder-white/50 text-lg font-medium outline-none"
           autoComplete="off"
           spellCheck="false"
         />
 
-        {showClearButton && (
+        {/* Action Buttons Container */}
+        <div className="absolute right-2 top-1/2 transform -translate-y-1/2 flex items-center gap-1">
+          {/* Clear Button */}
+          {showClearButton && (
+            <button
+              type="button"
+              onClick={handleClear}
+              className="p-2 text-white/60 hover:text-white/90 hover:bg-white/10 rounded-lg transition-all duration-200"
+              aria-label="Clear search"
+            >
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <line x1="18" y1="6" x2="6" y2="18" />
+                <line x1="6" y1="6" x2="18" y2="18" />
+              </svg>
+            </button>
+          )}
+
+          {/* Submit Button */}
           <button
-            type="button"
-            onClick={handleClear}
-            className="clear-button"
-            aria-label="Clear search"
+            type="submit"
+            className={`p-2 rounded-lg transition-all duration-200 ${
+              inputValue.trim().length >= 2
+                ? 'text-primary-400 hover:text-primary-300 hover:bg-primary-500/20'
+                : 'text-white/30 cursor-not-allowed'
+            }`}
+            aria-label="Search"
+            disabled={inputValue.trim().length < 2}
           >
             <svg
               width="16"
@@ -141,37 +180,25 @@ const SearchBar: React.FC<SearchBarProps> = ({
               strokeLinecap="round"
               strokeLinejoin="round"
             >
-              <line x1="18" y1="6" x2="6" y2="18" />
-              <line x1="6" y1="6" x2="18" y2="18" />
+              <circle cx="11" cy="11" r="8" />
+              <path d="m21 21-4.35-4.35" />
             </svg>
           </button>
-        )}
-
-        <button
-          type="submit"
-          className="search-submit"
-          aria-label="Search"
-          disabled={inputValue.trim().length < 2}
-        >
-          <svg
-            width="16"
-            height="16"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <circle cx="11" cy="11" r="8" />
-            <path d="m21 21-4.35-4.35" />
-          </svg>
-        </button>
+        </div>
       </div>
 
-      <div className="search-shortcuts">
-        <span className="shortcut-hint">
-          Press <kbd>Enter</kbd> to search, <kbd>Esc</kbd> to clear
+      {/* Keyboard Shortcuts Hint */}
+      <div className="flex justify-center">
+        <span className="text-white/50 text-sm font-medium">
+          Press{' '}
+          <kbd className="px-2 py-1 bg-white/10 text-white/70 font-mono text-xs rounded border border-white/20">
+            Enter
+          </kbd>{' '}
+          to search,{' '}
+          <kbd className="px-2 py-1 bg-white/10 text-white/70 font-mono text-xs rounded border border-white/20">
+            Esc
+          </kbd>{' '}
+          to clear
         </span>
       </div>
     </form>
