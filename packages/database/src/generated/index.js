@@ -237,7 +237,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "/home/ldanes/dev/movie-vibes/packages/database/src/generated",
+      "value": "/home/curnt/dev/movie-vibes/packages/database/src/generated",
       "fromEnvVar": null
     },
     "config": {
@@ -251,7 +251,7 @@ const config = {
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "/home/ldanes/dev/movie-vibes/packages/database/prisma/schema.prisma",
+    "sourceFilePath": "/home/curnt/dev/movie-vibes/packages/database/prisma/schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
@@ -265,7 +265,6 @@ const config = {
     "db"
   ],
   "activeProvider": "postgresql",
-  "postinstall": false,
   "inlineDatasources": {
     "db": {
       "url": {
