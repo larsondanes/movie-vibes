@@ -6,3 +6,4 @@
 - Review CLAUDE.md after compacting and respect project memory
 - Assume frontend dev server is running on port 3000
 - Assume backend dev server is running on port 3001
+- Always prioritize type safety over simplicity

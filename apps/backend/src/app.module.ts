@@ -8,6 +8,7 @@ import { AppService } from './app.service';
 import { AuthModule } from './modules/auth/auth.module';
 import { UsersModule } from './modules/users/users.module';
 import { MoviesModule } from './modules/movies/movies.module';
+import { MovieListsModule } from './modules/movie-lists/movie-lists.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { MoviesModule } from './modules/movies/movies.module';
     AuthModule,
     UsersModule,
     MoviesModule,
+    MovieListsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
