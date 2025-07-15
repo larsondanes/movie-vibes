@@ -10,12 +10,47 @@ import { MovieList, MovieListItem } from './entities/movie-list.entity';
 import { CreateMovieListInput } from './dto/create-movie-list.input';
 import { UpdateMovieListInput } from './dto/update-movie-list.input';
 import { AddMovieToListInput } from './dto/add-movie-to-list.input';
+import { ChangeListPrivacyInput } from './dto/change-list-privacy.input';
 
 @Injectable()
 export class MovieListsService {
   private readonly logger = new Logger(MovieListsService.name);
 
   constructor(private readonly prisma: PrismaClient) {}
+
+  /**
+   * Check if two users are friends (follow each other)
+   */
+  private async checkFriendsAccess(
+    ownerId: string,
+    viewerId?: string
+  ): Promise<boolean> {
+    if (!viewerId) {
+      return false;
+    }
+
+    // Check if both users follow each other (mutual following = friends)
+    const [viewerFollowsOwner, ownerFollowsViewer] = await Promise.all([
+      this.prisma.follow.findUnique({
+        where: {
+          followerId_followingId: {
+            followerId: viewerId,
+            followingId: ownerId,
+          },
+        },
+      }),
+      this.prisma.follow.findUnique({
+        where: {
+          followerId_followingId: {
+            followerId: ownerId,
+            followingId: viewerId,
+          },
+        },
+      }),
+    ]);
+
+    return !!(viewerFollowsOwner && ownerFollowsViewer);
+  }
 
   async createMovieList(
     userId: string,
@@ -78,10 +113,12 @@ export class MovieListsService {
     }
 
     if (movieList.privacy === 'FRIENDS' && movieList.userId !== userId) {
-      // TODO: Check if users are friends when friend system is implemented
-      throw new ForbiddenException(
-        'You do not have access to this friends-only list'
-      );
+      const hasAccess = await this.checkFriendsAccess(movieList.userId, userId);
+      if (!hasAccess) {
+        throw new ForbiddenException(
+          'You do not have access to this friends-only list'
+        );
+      }
     }
 
     return {
@@ -98,9 +135,18 @@ export class MovieListsService {
 
     // If viewing someone else's lists, filter by privacy
     if (viewerId !== userId) {
+      const allowedPrivacyLevels = ['PUBLIC'];
+
+      // Check if viewer is friends with the user
+      if (viewerId) {
+        const hasAccess = await this.checkFriendsAccess(userId, viewerId);
+        if (hasAccess) {
+          allowedPrivacyLevels.push('FRIENDS');
+        }
+      }
+
       whereClause.privacy = {
-        in: ['PUBLIC'], // Only show public lists for now
-        // TODO: Add 'FRIENDS' when friend system is implemented
+        in: allowedPrivacyLevels,
       };
     }
 
@@ -321,5 +367,92 @@ export class MovieListsService {
       );
       throw new BadRequestException('Failed to remove movie from list');
     }
+  }
+
+  async changeListPrivacy(
+    changePrivacyInput: ChangeListPrivacyInput,
+    userId: string
+  ): Promise<MovieList> {
+    const { listId, privacy } = changePrivacyInput;
+
+    // Check if list exists and user owns it
+    const existingList = await this.prisma.movieList.findUnique({
+      where: { id: listId },
+    });
+
+    if (!existingList) {
+      throw new NotFoundException('Movie list not found');
+    }
+
+    if (existingList.userId !== userId) {
+      throw new ForbiddenException(
+        'You can only change privacy of your own movie lists'
+      );
+    }
+
+    try {
+      const updatedList = await this.prisma.movieList.update({
+        where: { id: listId },
+        data: { privacy },
+        include: {
+          user: true,
+          items: {
+            include: {
+              movie: true,
+            },
+            orderBy: {
+              addedAt: 'desc',
+            },
+          },
+        },
+      });
+
+      return {
+        ...updatedList,
+        itemCount: updatedList.items.length,
+      };
+    } catch (error) {
+      this.logger.error(
+        `Failed to change list privacy: ${error instanceof Error ? error.message : 'Unknown error'}`,
+        error
+      );
+      throw new BadRequestException('Failed to change list privacy');
+    }
+  }
+
+  async canAccessList(listId: string, userId?: string): Promise<boolean> {
+    const movieList = await this.prisma.movieList.findUnique({
+      where: { id: listId },
+      select: {
+        privacy: true,
+        userId: true,
+      },
+    });
+
+    if (!movieList) {
+      return false;
+    }
+
+    // Owner can always access
+    if (movieList.userId === userId) {
+      return true;
+    }
+
+    // Public lists are accessible to everyone
+    if (movieList.privacy === 'PUBLIC') {
+      return true;
+    }
+
+    // Private lists are only accessible to owner
+    if (movieList.privacy === 'PRIVATE') {
+      return false;
+    }
+
+    // Friends lists require friendship check
+    if (movieList.privacy === 'FRIENDS' && userId) {
+      return this.checkFriendsAccess(movieList.userId, userId);
+    }
+
+    return false;
   }
 }

@@ -7,6 +7,7 @@ import { MovieList, MovieListItem } from './entities/movie-list.entity';
 import { CreateMovieListInput } from './dto/create-movie-list.input';
 import { UpdateMovieListInput } from './dto/update-movie-list.input';
 import { AddMovieToListInput } from './dto/add-movie-to-list.input';
+import { ChangeListPrivacyInput } from './dto/change-list-privacy.input';
 
 @Resolver(() => MovieList)
 export class MovieListsResolver {
@@ -82,5 +83,26 @@ export class MovieListsResolver {
       movieId,
       userId
     );
+  }
+
+  @Mutation(() => MovieList)
+  @UseGuards(JwtAuthGuard)
+  changeListPrivacy(
+    @Args('changeListPrivacyInput')
+    changeListPrivacyInput: ChangeListPrivacyInput,
+    @CurrentUser('sub') userId: string
+  ): Promise<MovieList> {
+    return this.movieListsService.changeListPrivacy(
+      changeListPrivacyInput,
+      userId
+    );
+  }
+
+  @Query(() => Boolean, { name: 'canAccessList' })
+  canAccessList(
+    @Args('listId', { type: () => ID }) listId: string,
+    @CurrentUser('sub', { nullable: true }) userId?: string
+  ): Promise<boolean> {
+    return this.movieListsService.canAccessList(listId, userId);
   }
 }

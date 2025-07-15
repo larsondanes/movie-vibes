@@ -62,35 +62,35 @@ The implementation is divided into 5 phases, progressing from foundational setup
 
 ### Phase 2: Core Movie Features
 
-| Step | Task                                                | Status         | Dependencies | Notes                                                                              |
-| ---- | --------------------------------------------------- | -------------- | ------------ | ---------------------------------------------------------------------------------- |
-| 21   | Set up TMDb API integration service                 | ✅ Completed   | Step 19      | External API service                                                               |
-| 22   | Create Movie model in Prisma schema                 | ✅ Completed   | Step 9       | Movie entity definition                                                            |
-| 23   | Implement movie search endpoints                    | ✅ Completed   | Step 21, 22  | Search and browse APIs                                                             |
-| 23.5 | Add comprehensive unit tests for TMDb functionality | ✅ Completed   | Steps 21-23  | 58 tests covering TMDb service, movies service, resolver, and integration          |
-| 24   | Create movie details endpoints                      | ✅ Completed   | Step 21, 22  | Individual movie data with comprehensive GraphQL API                               |
-| 25   | Build movie search UI components                    | ✅ Completed   | Step 23      | Search interface with real GraphQL integration                                     |
-| 26   | Create movie detail view components                 | ✅ Completed   | Step 24      | Movie information display with full details, cast, crew, videos                    |
-| 26.5 | Frontend Styling Improvements (Tailwind CSS)        | ✅ Completed   | Step 26      | All 18 components migrated to Tailwind CSS. Legacy CSS removed. 25.5hrs total.     |
-| 27   | Add MovieList model to Prisma                       | ✅ Completed   | Step 22      | MovieList and MovieListItem models with proper relationships and enums             |
-| 28   | Create list management endpoints (CRUD)             | ✅ Completed   | Step 27      | Complete GraphQL CRUD API with authentication, validation, and comprehensive tests |
-| 29   | Implement list privacy controls                     | ⏳ Not Started | Step 28      | Privacy settings                                                                   |
-| 30   | Build movie list UI components                      | ⏳ Not Started | Step 28      | List display and management                                                        |
-| 31   | Add movies to lists functionality                   | ⏳ Not Started | Step 30      | Add/remove movies                                                                  |
-| 32   | Create movie rating system (1-5 stars)              | ⏳ Not Started | Step 22      | Rating model and UI                                                                |
-| 33   | Add Review model to Prisma                          | ⏳ Not Started | Step 22      | Review entity                                                                      |
-| 34   | Implement review endpoints                          | ⏳ Not Started | Step 33      | Review CRUD operations                                                             |
-| 35   | Build review UI components                          | ⏳ Not Started | Step 34      | Review forms and display                                                           |
-| 36   | Create user profile pages                           | ⏳ Not Started | Step 20      | Profile viewing                                                                    |
-| 37   | Add avatar upload functionality                     | ⏳ Not Started | Step 36      | Image upload service                                                               |
-| 38   | Implement list viewing and management UI            | ⏳ Not Started | Step 30      | Enhanced list interface                                                            |
-| 39   | Add movie removal from lists                        | ⏳ Not Started | Step 31      | Remove functionality                                                               |
-| 40   | Create list sharing functionality                   | ⏳ Not Started | Step 29      | Share lists feature                                                                |
-| 41   | Implement basic movie recommendations               | ⏳ Not Started | Step 22      | Simple recommendation engine                                                       |
-| 42   | Add genre filtering                                 | ⏳ Not Started | Step 23      | Filter by genre                                                                    |
-| 43   | Create movie browsing by popularity/decade          | ⏳ Not Started | Step 23      | Browse interfaces                                                                  |
-| 44   | Set up React Query for caching                      | ⏳ Not Started | Step 25      | Client-side caching                                                                |
-| 45   | Add offline list viewing capability                 | ⏳ Not Started | Step 44      | Offline functionality                                                              |
+| Step | Task                                                | Status         | Dependencies | Notes                                                                                  |
+| ---- | --------------------------------------------------- | -------------- | ------------ | -------------------------------------------------------------------------------------- |
+| 21   | Set up TMDb API integration service                 | ✅ Completed   | Step 19      | External API service                                                                   |
+| 22   | Create Movie model in Prisma schema                 | ✅ Completed   | Step 9       | Movie entity definition                                                                |
+| 23   | Implement movie search endpoints                    | ✅ Completed   | Step 21, 22  | Search and browse APIs                                                                 |
+| 23.5 | Add comprehensive unit tests for TMDb functionality | ✅ Completed   | Steps 21-23  | 58 tests covering TMDb service, movies service, resolver, and integration              |
+| 24   | Create movie details endpoints                      | ✅ Completed   | Step 21, 22  | Individual movie data with comprehensive GraphQL API                                   |
+| 25   | Build movie search UI components                    | ✅ Completed   | Step 23      | Search interface with real GraphQL integration                                         |
+| 26   | Create movie detail view components                 | ✅ Completed   | Step 24      | Movie information display with full details, cast, crew, videos                        |
+| 26.5 | Frontend Styling Improvements (Tailwind CSS)        | ✅ Completed   | Step 26      | All 18 components migrated to Tailwind CSS. Legacy CSS removed. 25.5hrs total.         |
+| 27   | Add MovieList model to Prisma                       | ✅ Completed   | Step 22      | MovieList and MovieListItem models with proper relationships and enums                 |
+| 28   | Create list management endpoints (CRUD)             | ✅ Completed   | Step 27      | Complete GraphQL CRUD API with authentication, validation, and comprehensive tests     |
+| 29   | Implement list privacy controls                     | ✅ Completed   | Step 28      | Enhanced privacy controls with friends/mutual following access and comprehensive tests |
+| 30   | Build movie list UI components                      | ⏳ Not Started | Step 28      | List display and management                                                            |
+| 31   | Add movies to lists functionality                   | ⏳ Not Started | Step 30      | Add/remove movies                                                                      |
+| 32   | Create movie rating system (1-5 stars)              | ⏳ Not Started | Step 22      | Rating model and UI                                                                    |
+| 33   | Add Review model to Prisma                          | ⏳ Not Started | Step 22      | Review entity                                                                          |
+| 34   | Implement review endpoints                          | ⏳ Not Started | Step 33      | Review CRUD operations                                                                 |
+| 35   | Build review UI components                          | ⏳ Not Started | Step 34      | Review forms and display                                                               |
+| 36   | Create user profile pages                           | ⏳ Not Started | Step 20      | Profile viewing                                                                        |
+| 37   | Add avatar upload functionality                     | ⏳ Not Started | Step 36      | Image upload service                                                                   |
+| 38   | Implement list viewing and management UI            | ⏳ Not Started | Step 30      | Enhanced list interface                                                                |
+| 39   | Add movie removal from lists                        | ⏳ Not Started | Step 31      | Remove functionality                                                                   |
+| 40   | Create list sharing functionality                   | ⏳ Not Started | Step 29      | Share lists feature                                                                    |
+| 41   | Implement basic movie recommendations               | ⏳ Not Started | Step 22      | Simple recommendation engine                                                           |
+| 42   | Add genre filtering                                 | ⏳ Not Started | Step 23      | Filter by genre                                                                        |
+| 43   | Create movie browsing by popularity/decade          | ⏳ Not Started | Step 23      | Browse interfaces                                                                      |
+| 44   | Set up React Query for caching                      | ⏳ Not Started | Step 25      | Client-side caching                                                                    |
+| 45   | Add offline list viewing capability                 | ⏳ Not Started | Step 44      | Offline functionality                                                                  |
 
 ### Phase 3: Social Features
 
@@ -171,12 +171,12 @@ The implementation is divided into 5 phases, progressing from foundational setup
 
 ## Progress Tracking
 
-**Overall Progress**: 31/106 steps completed (29.2%)
+**Overall Progress**: 32/106 steps completed (30.2%)
 
 ### Phase Completion Status
 
 - **Phase 1**: 20/20 steps completed (100%)
-- **Phase 2**: 11/26 steps completed (42.3%)
+- **Phase 2**: 12/26 steps completed (46.2%)
 - **Phase 3**: 0/25 steps completed (0%)
 - **Phase 4**: 0/25 steps completed (0%)
 - **Phase 5**: 0/10 steps completed (0%)
@@ -224,7 +224,7 @@ The implementation is divided into 5 phases, progressing from foundational setup
 - ✅ Users can search and browse movies (backend APIs and UI complete)
 - ✅ Users can view detailed movie information with cast, crew, and videos
 - ✅ Frontend styling migrated to modern Tailwind CSS utilities
-- ✅ Users can create and manage movie lists (complete CRUD API with authentication)
+- ✅ Users can create and manage movie lists (complete CRUD API with authentication and privacy controls)
 - ⏳ Users can rate and review movies
 
 ### Phase 3 Success

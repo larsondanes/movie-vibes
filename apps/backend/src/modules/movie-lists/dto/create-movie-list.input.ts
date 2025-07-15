@@ -1,6 +1,6 @@
 import { InputType, Field } from '@nestjs/graphql';
 import { IsString, IsOptional, IsEnum, Length } from 'class-validator';
-import { MovieListType, PrivacyLevel } from '../entities/movie-list.entity';
+import { MovieListType, PrivacyLevel } from '@movie-vibes/database';
 
 @InputType()
 export class CreateMovieListInput {

@@ -205,6 +205,7 @@ type Query {
   movieList(id: ID!): MovieList!
   movieLists(userId: ID!): [MovieList!]!
   myMovieLists: [MovieList!]!
+  canAccessList(listId: ID!): Boolean!
 }
 
 input SearchMoviesInput {
@@ -221,6 +222,7 @@ type Mutation {
   deleteMovieList(id: ID!): Boolean!
   addMovieToList(addMovieToListInput: AddMovieToListInput!): MovieListItem!
   removeMovieFromList(movieListId: ID!, movieId: ID!): Boolean!
+  changeListPrivacy(changeListPrivacyInput: ChangeListPrivacyInput!): MovieList!
 }
 
 input RegisterInput {
@@ -266,4 +268,9 @@ input AddMovieToListInput {
   notes: String
   rating: Int
   watchedAt: String
+}
+
+input ChangeListPrivacyInput {
+  listId: ID!
+  privacy: PrivacyLevel!
 }

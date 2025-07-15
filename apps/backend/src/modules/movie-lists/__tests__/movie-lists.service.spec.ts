@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { PrismaClient } from '@movie-vibes/database';
 import { MovieListsService } from '../movie-lists.service';
-import { MovieListType, PrivacyLevel } from '../entities/movie-list.entity';
+import { MovieListType, PrivacyLevel } from '@movie-vibes/database';
 
 // Type-safe Prisma mock interface
 interface MockPrismaClient {
@@ -23,6 +23,9 @@ interface MockPrismaClient {
     delete: jest.Mock;
   };
   movie: {
+    findUnique: jest.Mock;
+  };
+  follow: {
     findUnique: jest.Mock;
   };
 }
@@ -93,6 +96,9 @@ describe('MovieListsService', () => {
         delete: jest.fn(),
       },
       movie: {
+        findUnique: jest.fn(),
+      },
+      follow: {
         findUnique: jest.fn(),
       },
     };
@@ -377,6 +383,254 @@ describe('MovieListsService', () => {
       await expect(
         service.removeMovieFromList(mockMovieListId, mockMovieId, mockUserId)
       ).rejects.toThrow(NotFoundException);
+    });
+  });
+
+  describe('Privacy Controls', () => {
+    describe('getMovieListById with Friends privacy', () => {
+      beforeEach(() => {
+        jest.clearAllMocks();
+      });
+
+      it('should allow access to friends list when users are mutual friends', async () => {
+        const friendsList = {
+          ...mockMovieList,
+          privacy: PrivacyLevel.FRIENDS,
+          items: [],
+        };
+
+        prisma.movieList.findUnique.mockResolvedValue(friendsList);
+        // Mock mutual following relationship
+        prisma.follow.findUnique
+          .mockResolvedValueOnce({ id: 'follow-1' }) // viewer follows owner
+          .mockResolvedValueOnce({ id: 'follow-2' }); // owner follows viewer
+
+        const result = await service.getMovieListById(
+          mockMovieListId,
+          mockOtherUserId
+        );
+
+        expect(result).toEqual({ ...friendsList, itemCount: 0 });
+        expect(prisma.follow.findUnique).toHaveBeenCalledTimes(2);
+      });
+
+      it('should deny access to friends list when users are not mutual friends', async () => {
+        const friendsList = { ...mockMovieList, privacy: PrivacyLevel.FRIENDS };
+        prisma.movieList.findUnique.mockResolvedValue(friendsList);
+        // Mock one-way or no following relationship
+        prisma.follow.findUnique
+          .mockResolvedValueOnce({ id: 'follow-1' }) // viewer follows owner
+          .mockResolvedValueOnce(null); // owner doesn't follow viewer
+
+        await expect(
+          service.getMovieListById(mockMovieListId, mockOtherUserId)
+        ).rejects.toThrow(ForbiddenException);
+      });
+
+      it('should deny access to friends list when not logged in', async () => {
+        const friendsList = { ...mockMovieList, privacy: PrivacyLevel.FRIENDS };
+        prisma.movieList.findUnique.mockResolvedValue(friendsList);
+
+        await expect(service.getMovieListById(mockMovieListId)).rejects.toThrow(
+          ForbiddenException
+        );
+      });
+    });
+
+    describe('getMovieListsByUserId with privacy filtering', () => {
+      beforeEach(() => {
+        jest.clearAllMocks();
+      });
+
+      it('should return only public lists for non-friends', async () => {
+        prisma.follow.findUnique
+          .mockResolvedValueOnce(null) // no mutual following
+          .mockResolvedValueOnce(null);
+
+        const publicLists = [
+          { ...mockMovieList, privacy: PrivacyLevel.PUBLIC, items: [] },
+        ];
+        prisma.movieList.findMany.mockResolvedValue(publicLists);
+
+        const result = await service.getMovieListsByUserId(
+          mockUserId,
+          mockOtherUserId
+        );
+
+        expect(prisma.movieList.findMany).toHaveBeenCalledWith({
+          where: {
+            userId: mockUserId,
+            privacy: { in: ['PUBLIC'] },
+          },
+          include: expect.any(Object),
+          orderBy: { updatedAt: 'desc' },
+        });
+        expect(result).toHaveLength(1);
+      });
+
+      it('should return public and friends lists for mutual friends', async () => {
+        // Mock mutual following relationship
+        prisma.follow.findUnique
+          .mockResolvedValueOnce({ id: 'follow-1' }) // viewer follows owner
+          .mockResolvedValueOnce({ id: 'follow-2' }); // owner follows viewer
+
+        const lists = [
+          { ...mockMovieList, privacy: PrivacyLevel.PUBLIC, items: [] },
+          { ...mockMovieList, privacy: PrivacyLevel.FRIENDS, items: [] },
+        ];
+        prisma.movieList.findMany.mockResolvedValue(lists);
+
+        const result = await service.getMovieListsByUserId(
+          mockUserId,
+          mockOtherUserId
+        );
+
+        expect(prisma.movieList.findMany).toHaveBeenCalledWith({
+          where: {
+            userId: mockUserId,
+            privacy: { in: ['PUBLIC', 'FRIENDS'] },
+          },
+          include: expect.any(Object),
+          orderBy: { updatedAt: 'desc' },
+        });
+        expect(result).toHaveLength(2);
+      });
+
+      it('should return all lists for owner', async () => {
+        const allLists = [
+          { ...mockMovieList, privacy: PrivacyLevel.PUBLIC, items: [] },
+          { ...mockMovieList, privacy: PrivacyLevel.FRIENDS, items: [] },
+          { ...mockMovieList, privacy: PrivacyLevel.PRIVATE, items: [] },
+        ];
+        prisma.movieList.findMany.mockResolvedValue(allLists);
+
+        const result = await service.getMovieListsByUserId(
+          mockUserId,
+          mockUserId
+        );
+
+        expect(prisma.movieList.findMany).toHaveBeenCalledWith({
+          where: { userId: mockUserId },
+          include: expect.any(Object),
+          orderBy: { updatedAt: 'desc' },
+        });
+        expect(result).toHaveLength(3);
+      });
+    });
+
+    describe('changeListPrivacy', () => {
+      beforeEach(() => {
+        jest.clearAllMocks();
+      });
+
+      it('should change list privacy successfully', async () => {
+        const changeInput = {
+          listId: mockMovieListId,
+          privacy: PrivacyLevel.PRIVATE,
+        };
+
+        prisma.movieList.findUnique.mockResolvedValue(mockMovieList);
+        const updatedList = {
+          ...mockMovieList,
+          privacy: PrivacyLevel.PRIVATE,
+          items: [],
+        };
+        prisma.movieList.update.mockResolvedValue(updatedList);
+
+        const result = await service.changeListPrivacy(changeInput, mockUserId);
+
+        expect(prisma.movieList.update).toHaveBeenCalledWith({
+          where: { id: mockMovieListId },
+          data: { privacy: PrivacyLevel.PRIVATE },
+          include: expect.any(Object),
+        });
+        expect(result).toEqual({ ...updatedList, itemCount: 0 });
+      });
+
+      it('should throw ForbiddenException if user does not own the list', async () => {
+        const changeInput = {
+          listId: mockMovieListId,
+          privacy: PrivacyLevel.PRIVATE,
+        };
+
+        prisma.movieList.findUnique.mockResolvedValue(mockMovieList);
+
+        await expect(
+          service.changeListPrivacy(changeInput, mockOtherUserId)
+        ).rejects.toThrow(ForbiddenException);
+      });
+    });
+
+    describe('canAccessList', () => {
+      beforeEach(() => {
+        jest.clearAllMocks();
+      });
+
+      it('should return true for public lists', async () => {
+        const publicList = { privacy: PrivacyLevel.PUBLIC, userId: mockUserId };
+        prisma.movieList.findUnique.mockResolvedValue(publicList);
+
+        const result = await service.canAccessList(
+          mockMovieListId,
+          mockOtherUserId
+        );
+
+        expect(result).toBe(true);
+      });
+
+      it('should return true for owner accessing their own list', async () => {
+        const privateList = {
+          privacy: PrivacyLevel.PRIVATE,
+          userId: mockUserId,
+        };
+        prisma.movieList.findUnique.mockResolvedValue(privateList);
+
+        const result = await service.canAccessList(mockMovieListId, mockUserId);
+
+        expect(result).toBe(true);
+      });
+
+      it('should return false for private lists accessed by other users', async () => {
+        const privateList = {
+          privacy: PrivacyLevel.PRIVATE,
+          userId: mockUserId,
+        };
+        prisma.movieList.findUnique.mockResolvedValue(privateList);
+
+        const result = await service.canAccessList(
+          mockMovieListId,
+          mockOtherUserId
+        );
+
+        expect(result).toBe(false);
+      });
+
+      it('should return true for friends lists when users are mutual friends', async () => {
+        const friendsList = {
+          privacy: PrivacyLevel.FRIENDS,
+          userId: mockUserId,
+        };
+        prisma.movieList.findUnique.mockResolvedValue(friendsList);
+        // Mock mutual following relationship
+        prisma.follow.findUnique
+          .mockResolvedValueOnce({ id: 'follow-1' })
+          .mockResolvedValueOnce({ id: 'follow-2' });
+
+        const result = await service.canAccessList(
+          mockMovieListId,
+          mockOtherUserId
+        );
+
+        expect(result).toBe(true);
+      });
+
+      it('should return false for non-existent lists', async () => {
+        prisma.movieList.findUnique.mockResolvedValue(null);
+
+        const result = await service.canAccessList('nonexistent');
+
+        expect(result).toBe(false);
+      });
     });
   });
 });

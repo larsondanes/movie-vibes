@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { MovieListsResolver } from '../movie-lists.resolver';
 import { MovieListsService } from '../movie-lists.service';
-import { MovieListType, PrivacyLevel } from '../entities/movie-list.entity';
+import { MovieListType, PrivacyLevel } from '@movie-vibes/database';
 
 describe('MovieListsResolver', () => {
   let resolver: MovieListsResolver;
